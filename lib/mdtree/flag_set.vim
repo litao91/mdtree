@@ -1,7 +1,7 @@
 "CLASS: FlagSet
 "============================================================
 let s:FlagSet = {}
-let g:NERDTreeFlagSet = s:FlagSet
+let g:MDTreeFlagSet = s:FlagSet
 
 "FUNCTION: FlagSet.addFlag(scope, flag) {{{1
 function! s:FlagSet.addFlag(scope, flag)

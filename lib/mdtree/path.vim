@@ -8,7 +8,7 @@
 
 
 " This constant is used throughout this script for sorting purposes.
-let s:MDTreeSortStarIndex = index(g:mdtreeSortOrder, '*')
+let s:MDTreeSortStarIndex = index(g:MDTreeSortOrder, '*')
 lockvar s:MDTreeSortStarIndex
 
 let s:Path = {}
@@ -18,7 +18,7 @@ let g:MDTreePath = s:Path
 function! s:Path.AbsolutePathFor(pathStr)
     let l:prependWorkingDir = 0
 
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         let l:prependWorkingDir = a:pathStr !~# '^.:\(\\\|\/\)' && a:pathStr !~# '^\(\\\\\|\/\/\)'
     else
         let l:prependWorkingDir = a:pathStr !~# '^/'
@@ -77,7 +77,7 @@ function! s:Path.changeToDir()
 
     try
         execute "cd " . dir
-        call nerdtree#echo("CWD is now: " . getcwd())
+        call mdtree#echo("CWD is now: " . getcwd())
     catch
         throw "MDTree.PathChangeError: cannot change CWD to " . dir
     endtry
@@ -286,7 +286,7 @@ endfunction
 "
 " If running windows, cache the drive letter for this path
 function! s:Path.extractDriveLetter(fullpath)
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         if a:fullpath =~ '^\(\\\\\|\/\/\)'
             "For network shares, the 'drive' consists of the first two parts of the path, i.e. \\boxname\share
             let self.drive = substitute(a:fullpath, '^\(\(\\\\\|\/\/\)[^\\\/]*\(\\\|\/\)[^\\\/]*\).*', '\1', '')
@@ -309,7 +309,7 @@ endfunction
 
 " FUNCTION: Path._escChars() {{{1
 function! s:Path._escChars()
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         return " `\|\"#%&,?()\*^<>$"
     endif
 
@@ -337,7 +337,7 @@ endfunction
 " Return:
 " a new Path object
 function! s:Path.getParent()
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         let path = self.drive . '\' . join(self.pathSegments[0:-2], '\')
     else
         let path = '/'. join(self.pathSegments[0:-2], '/')
@@ -454,11 +454,11 @@ function! s:Path.isUnixHiddenPath()
     endif
 endfunction
 
-" FUNCTION: Path.ignore(nerdtree) {{{1
+" FUNCTION: Path.ignore(mdtree) {{{1
 " returns true if this path should be ignored
-function! s:Path.ignore(nerdtree)
+function! s:Path.ignore(mdtree)
     "filter out the user specified paths to ignore
-    if a:nerdtree.ui.isIgnoreFilterEnabled()
+    if a:mdtree.ui.isIgnoreFilterEnabled()
         for i in g:MDTreeIgnore
             if self._ignorePatternMatches(i)
                 return 1
@@ -466,18 +466,18 @@ function! s:Path.ignore(nerdtree)
         endfor
 
         for callback in g:MDTree.PathFilters()
-            if {callback}({'path': self, 'nerdtree': a:nerdtree})
+            if {callback}({'path': self, 'mdtree': a:mdtree})
                 return 1
             endif
         endfor
     endif
 
     "dont show hidden files unless instructed to
-    if !a:nerdtree.ui.getShowHidden() && self.isUnixHiddenFile()
+    if !a:mdtree.ui.getShowHidden() && self.isUnixHiddenFile()
         return 1
     endif
 
-    if a:nerdtree.ui.getShowFiles() ==# 0 && self.isDirectory ==# 0
+    if a:mdtree.ui.getShowFiles() ==# 0 && self.isDirectory ==# 0
         return 1
     endif
 
@@ -567,7 +567,7 @@ endfunction
 " systems.
 function! s:Path.Slash()
 
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         if exists('+shellslash') && &shellslash
             return '/'
         endif
@@ -642,16 +642,16 @@ function! s:Path.readInfoFromDisk(fullpath)
     endif
 endfunction
 
-" FUNCTION: Path.refresh(nerdtree) {{{1
-function! s:Path.refresh(nerdtree)
+" FUNCTION: Path.refresh(mdtree) {{{1
+function! s:Path.refresh(mdtree)
     call self.readInfoFromDisk(self.str())
-    call g:MDTreePathNotifier.NotifyListeners('refresh', self, a:nerdtree, {})
+    call g:MDTreePathNotifier.NotifyListeners('refresh', self, a:mdtree, {})
     call self.cacheDisplayString()
 endfunction
 
-" FUNCTION: Path.refreshFlags(nerdtree) {{{1
-function! s:Path.refreshFlags(nerdtree)
-    call g:MDTreePathNotifier.NotifyListeners('refreshFlags', self, a:nerdtree, {})
+" FUNCTION: Path.refreshFlags(mdtree) {{{1
+function! s:Path.refreshFlags(mdtree)
+    call g:MDTreePathNotifier.NotifyListeners('refreshFlags', self, a:mdtree, {})
     call self.cacheDisplayString()
 endfunction
 
@@ -713,7 +713,7 @@ function! s:Path.str(...)
         let toReturn = self._str()
     endif
 
-    if nerdtree#has_opt(options, 'escape')
+    if mdtree#has_opt(options, 'escape')
         let toReturn = shellescape(toReturn)
     endif
 
@@ -758,7 +758,7 @@ function! s:Path._strForEdit()
 
     " On Windows, the drive letter may be removed by "fnamemodify()".  Add it
     " back, if necessary.
-    if nerdtree#runningWindows() && l:result[0] == s:Path.Slash()
+    if mdtree#runningWindows() && l:result[0] == s:Path.Slash()
         let l:result = self.drive . l:result
     endif
 
@@ -776,13 +776,13 @@ function! s:Path._strForGlob()
     let lead = s:Path.Slash()
 
     "if we are running windows then slap a drive letter on the front
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         let lead = self.drive . '\'
     endif
 
     let toReturn = lead . join(self.pathSegments, s:Path.Slash())
 
-    if !nerdtree#runningWindows()
+    if !mdtree#runningWindows()
         let toReturn = escape(toReturn, self._escChars())
     endif
     return toReturn
@@ -795,7 +795,7 @@ function! s:Path._str()
     let l:separator = s:Path.Slash()
     let l:leader = l:separator
 
-    if nerdtree#runningWindows()
+    if mdtree#runningWindows()
         let l:leader = self.drive . l:separator
     endif
 
@@ -832,7 +832,7 @@ endfunction
 " Args:
 " pathstr: the windows path to convert
 function! s:Path.WinToUnixPath(pathstr)
-    if !nerdtree#runningWindows()
+    if !mdtree#runningWindows()
         return a:pathstr
     endif
 

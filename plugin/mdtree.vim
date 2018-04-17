@@ -26,34 +26,15 @@ call s:initVariable("g:MDTreeGlyphReadonly", "RO")
 call s:initVariable("g:MDTreeWinPos", "left")
 call s:initVariable("g:MDTreeWinSize", 31)
 
+if !exists("g:MDTreeSortOrder")
+    let g:MDTreeSortOrder = ['\/$', '*', '\.swp$', '\.bak$', '\~$']
+else
+    if count(g:MDTreeSortOrder, '*') < 1
+        call add(g:MDTreeSortOrder, '*')
+    endif
+endif
+
 call mdtree#loadClassFiles()
 call mdtree#ui_glue#setupCommands()
-
-" SECTION: Public API {{{1
-" =================================
-function! MDTreeAddMenuItem(options)
-    call g:MDTreeMenuItem.Create(a:options)
-endfunction
-
-function! MDTreeAddMenuSeparator(...)
-    let opts = a:0 ? a:1 : {}
-    call g:MDTreeMenuItem.CreateSeparator(opts)
-endfunction
-
-function! MDTreeAddSubmenu(options)
-    return g:MDTreeMenuItem.Create(a:options)
-endfunction
-
-function! MDTreeAddKeyMap(options)
-    call g:MDTreeKeyMap.Create(a:options)
-endfunction
-
-function! MDTreeRender()
-    call mdtree#renderView()
-endfunction
-
-
-" SECTION: Post Source Actions {{{1
-call nerdtree#postSourceActions()
 
 let &cpo = s:old_cpo

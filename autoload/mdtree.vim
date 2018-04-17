@@ -28,16 +28,9 @@ endfunction
 
 " FUNCTION: mdtree#loadClassFiles() {{{2
 function! mdtree#loadClassFiles()
-    runtime lib/mdtree/ui.vim
-endfunction
-
-" FUNCTION: mdtree#postSourceActions() {{{2
-function! mdtree#postSourceActions()
-    call g:mdtreeBookmark.CacheBookmarks(1)
-    call mdtree#ui_glue#createDefaultBindings()
-
-    "load all mdtree plugins
-    runtime! mdtree_plugin/**/*.vim
+    runtime lib/mdtree/creator.vim
+    runtime lib/mdtree/path.vim
+    runtime lib/mdtree/flag_set.vim
 endfunction
 
 "FUNCTION: mdtree#runningWindows(dir) {{{2
@@ -81,11 +74,6 @@ function! mdtree#echoWarning(msg)
     echohl warningmsg
     call mdtree#echo(a:msg)
     echohl normal
-endfunction
-
-"FUNCTION: mdtree#renderView {{{2
-function! mdtree#renderView()
-    call b:MDTree.render()
 endfunction
 
 " vim: set sw=4 sts=4 et fdm=marker:
