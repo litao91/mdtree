@@ -1,60 +1,32 @@
-if exists("g:loaded_nerdtree_ui_glue_autoload")
+if exists("g:loaded_mdtree_ui_glue_autoload")
     finish
 endif
-let g:loaded_nerdtree_ui_glue_autoload = 1
+let g:loaded_mdtree_ui_glue_autoload = 1
 
-" FUNCTION: nerdtree#ui_glue#createDefaultBindings() {{{1
-function! nerdtree#ui_glue#createDefaultBindings()
+" FUNCTION: mdtree#ui_glue#createDefaultBindings() {{{1
+function! mdtree#ui_glue#createDefaultBindings()
     let s = '<SNR>' . s:SID() . '_'
-
-    call MDTreeAddKeyMap({ 'key': '<MiddleMouse>', 'scope': 'all', 'callback': s . 'handleMiddleMouse' })
-    call MDTreeAddKeyMap({ 'key': '<LeftRelease>', 'scope': "all", 'callback': s."handleLeftClick" })
-    call MDTreeAddKeyMap({ 'key': '<2-LeftMouse>', 'scope': "DirNode", 'callback': s."activateDirNode" })
-    call MDTreeAddKeyMap({ 'key': '<2-LeftMouse>', 'scope': "FileNode", 'callback': s."activateFileNode" })
-    call MDTreeAddKeyMap({ 'key': '<2-LeftMouse>', 'scope': "Bookmark", 'callback': s."activateBookmark" })
-    call MDTreeAddKeyMap({ 'key': '<2-LeftMouse>', 'scope': "all", 'callback': s."activateAll" })
-
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapActivateNode, 'scope': "DirNode", 'callback': s."activateDirNode" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapActivateNode, 'scope': "FileNode", 'callback': s."activateFileNode" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapActivateNode, 'scope': "Bookmark", 'callback': s."activateBookmark" })
+    call MDTreeAddKeyMap({ 'key': g:MDTreeMapActivateNode, 'scope': "CategoryNode", 'callback': s."activateCategoryNode" })
+    call MDTreeAddKeyMap({ 'key': g:MDTreeMapActivateNode, 'scope': "ArticleNode", 'callback': s."activateArticleNode" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapActivateNode, 'scope': "all", 'callback': s."activateAll" })
 
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenSplit, 'scope': "Node", 'callback': s."openHSplit" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenVSplit, 'scope': "Node", 'callback': s."openVSplit" })
 
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenSplit, 'scope': "Bookmark", 'callback': s."openHSplit" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenVSplit, 'scope': "Bookmark", 'callback': s."openVSplit" })
-
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapPreview, 'scope': "Node", 'callback': s."previewNodeCurrent" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapPreviewVSplit, 'scope': "Node", 'callback': s."previewNodeVSplit" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapPreviewSplit, 'scope': "Node", 'callback': s."previewNodeHSplit" })
 
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapPreview, 'scope': "Bookmark", 'callback': s."previewNodeCurrent" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapPreviewVSplit, 'scope': "Bookmark", 'callback': s."previewNodeVSplit" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapPreviewSplit, 'scope': "Bookmark", 'callback': s."previewNodeHSplit" })
+    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenRecursively, 'scope': "CategoryNode", 'callback': s."openNodeRecursively" })
 
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenRecursively, 'scope': "DirNode", 'callback': s."openNodeRecursively" })
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapUpdir, 'scope': "all", 'callback': s."upDirCurrentRootClosed" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapUpdirKeepOpen, 'scope': "all", 'callback': s."upDirCurrentRootOpen" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapChangeRoot, 'scope': "Node", 'callback': s."chRoot" })
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapChdir, 'scope': "Node", 'callback': s."chCwd" })
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapQuit, 'scope': "all", 'callback': s."closeTreeWindow" })
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapCWD, 'scope': "all", 'callback': "nerdtree#ui_glue#chRootCwd" })
+    call MDTreeAddKeyMap({ 'key': g:MDTreeMapCWD, 'scope': "all", 'callback': "mdtree#ui_glue#chRootCwd" })
 
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapRefreshRoot, 'scope': "all", 'callback': s."refreshRoot" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapRefresh, 'scope': "Node", 'callback': s."refreshCurrent" })
 
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapHelp, 'scope': "all", 'callback': s."displayHelp" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapToggleZoom, 'scope': "all", 'callback': s."toggleZoom" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapToggleHidden, 'scope': "all", 'callback': s."toggleShowHidden" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapToggleFilters, 'scope': "all", 'callback': s."toggleIgnoreFilter" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapToggleFiles, 'scope': "all", 'callback': s."toggleShowFiles" })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapToggleBookmarks, 'scope': "all", 'callback': s."toggleShowBookmarks" })
 
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapCloseDir, 'scope': "Node", 'callback': s."closeCurrentDir" })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapCloseChildren, 'scope': "DirNode", 'callback': s."closeChildren" })
@@ -70,12 +42,6 @@ function! nerdtree#ui_glue#createDefaultBindings()
 
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenInTab, 'scope': 'Node', 'callback': s . 'openInNewTab' })
     call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenInTabSilent, 'scope': 'Node', 'callback': s . 'openInNewTabSilent' })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenInTab, 'scope': 'Bookmark', 'callback': s . 'openInNewTab' })
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenInTabSilent, 'scope': 'Bookmark', 'callback': s . 'openInNewTabSilent' })
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapOpenExpl, 'scope': "DirNode", 'callback': s."openExplorer" })
-
-    call MDTreeAddKeyMap({ 'key': g:MDTreeMapDeleteBookmark, 'scope': "Bookmark", 'callback': s."deleteBookmark" })
 endfunction
 
 
@@ -86,7 +52,7 @@ endfunction
 "handle the user activating the updir line
 function! s:activateAll()
     if getline(".") ==# g:MDTreeUI.UpDirLine()
-        return nerdtree#ui_glue#upDir(0)
+        return mdtree#ui_glue#upDir(0)
     endif
 endfunction
 
@@ -94,7 +60,7 @@ endfunction
 function! s:activateDirNode(directoryNode)
 
     if a:directoryNode.isRoot() && a:directoryNode.isOpen
-        call nerdtree#echo('cannot close tree root')
+        call mdtree#echo('cannot close tree root')
         return
     endif
 
@@ -113,9 +79,9 @@ function! s:activateBookmark(bm)
     call a:bm.activate(b:MDTree, !a:bm.path.isDirectory ? {'where': 'p'} : {})
 endfunction
 
-" FUNCTION: nerdtree#ui_glue#bookmarkNode(name) {{{1
+" FUNCTION: mdtree#ui_glue#bookmarkNode(name) {{{1
 " Associate the current node with the given name
-function! nerdtree#ui_glue#bookmarkNode(...)
+function! mdtree#ui_glue#bookmarkNode(...)
     let currentNode = g:MDTreeFileNode.GetSelected()
     if currentNode != {}
         let name = a:1
@@ -126,10 +92,10 @@ function! nerdtree#ui_glue#bookmarkNode(...)
             call currentNode.bookmark(name)
             call b:MDTree.render()
         catch /^MDTree.IllegalBookmarkNameError/
-            call nerdtree#echo("bookmark names must not contain spaces")
+            call mdtree#echo("bookmark names must not contain spaces")
         endtry
     else
-        call nerdtree#echo("select a node first")
+        call mdtree#echo("select a node first")
     endif
 endfunction
 
@@ -138,7 +104,7 @@ function! s:chCwd(node)
     try
         call a:node.path.changeToDir()
     catch /^MDTree.PathChangeError/
-        call nerdtree#echoWarning("could not change cwd")
+        call mdtree#echoWarning("could not change cwd")
     endtry
 endfunction
 
@@ -148,13 +114,13 @@ function! s:chRoot(node)
     call b:MDTree.changeRoot(a:node)
 endfunction
 
-" FUNCTION: s:nerdtree#ui_glue#chRootCwd() {{{1
+" FUNCTION: s:mdtree#ui_glue#chRootCwd() {{{1
 " changes the current root to CWD
-function! nerdtree#ui_glue#chRootCwd()
+function! mdtree#ui_glue#chRootCwd()
     try
         let cwd = g:MDTreePath.New(getcwd())
     catch /^MDTree.InvalidArgumentsError/
-        call nerdtree#echo("current directory does not exist.")
+        call mdtree#echo("current directory does not exist.")
         return
     endtry
     if cwd.str() == g:MDTreeFileNode.GetRootForTab().path.str()
@@ -163,8 +129,8 @@ function! nerdtree#ui_glue#chRootCwd()
     call s:chRoot(g:MDTreeDirNode.New(cwd, b:MDTree))
 endfunction
 
-" FUNCTION: nnerdtree#ui_glue#clearBookmarks(bookmarks) {{{1
-function! nerdtree#ui_glue#clearBookmarks(bookmarks)
+" FUNCTION: nmdtree#ui_glue#clearBookmarks(bookmarks) {{{1
+function! mdtree#ui_glue#clearBookmarks(bookmarks)
     if a:bookmarks ==# ''
         let currentNode = g:MDTreeFileNode.GetSelected()
         if currentNode != {}
@@ -193,7 +159,7 @@ endfunction
 function! s:closeCurrentDir(node)
 
     if a:node.isRoot()
-        call nerdtree#echo('cannot close parent of tree root')
+        call mdtree#echo('cannot close parent of tree root')
         return
     endif
 
@@ -204,7 +170,7 @@ function! s:closeCurrentDir(node)
     endwhile
 
     if l:parent.isRoot()
-        call nerdtree#echo('cannot close tree root')
+        call mdtree#echo('cannot close tree root')
         return
     endif
 
@@ -222,7 +188,7 @@ function! s:closeTreeWindow()
         if winnr("$") > 1
             call g:MDTree.Close()
         else
-            call nerdtree#echo("Cannot close last window")
+            call mdtree#echo("Cannot close last window")
         endif
     endif
 endfunction
@@ -239,7 +205,7 @@ function! s:deleteBookmark(bookmark)
     let l:selection = confirm(l:message, l:choices, 1, 'Warning')
 
     if l:selection != 1
-        call nerdtree#echo('bookmark not deleted')
+        call mdtree#echo('bookmark not deleted')
         return
     endif
 
@@ -249,7 +215,7 @@ function! s:deleteBookmark(bookmark)
         call b:MDTree.render()
         echo | redraw
     catch /^MDTree/
-        call nerdtree#echoWarning('could not remove bookmark')
+        call mdtree#echoWarning('could not remove bookmark')
     endtry
 endfunction
 
@@ -266,14 +232,14 @@ function! s:findAndRevealPath(pathStr)
     let l:pathStr = !empty(a:pathStr) ? a:pathStr : expand('%:p')
 
     if empty(l:pathStr)
-        call nerdtree#echoWarning('no file for the current buffer')
+        call mdtree#echoWarning('no file for the current buffer')
         return
     endif
 
     try
         let l:pathObj = g:MDTreePath.New(l:pathStr)
     catch /^MDTree.InvalidArgumentsError/
-        call nerdtree#echoWarning('invalid path')
+        call mdtree#echoWarning('invalid path')
         return
     endtry
 
@@ -281,7 +247,7 @@ function! s:findAndRevealPath(pathStr)
         try
             let l:cwd = g:MDTreePath.New(getcwd())
         catch /^MDTree.InvalidArgumentsError/
-            call nerdtree#echo('current directory does not exist.')
+            call mdtree#echo('current directory does not exist.')
             let l:cwd = l:pathObj.getParent()
         endtry
 
@@ -353,7 +319,7 @@ function! s:handleMiddleMouse()
 
     let l:currentNode = g:MDTreeFileNode.GetSelected()
     if empty(l:currentNode)
-        call nerdtree#echoError('use the pointer to select a node')
+        call mdtree#echoError('use the pointer to select a node')
         return
     endif
 
@@ -369,7 +335,7 @@ endfunction
 " direction: 0 if going to first child, 1 if going to last
 function! s:jumpToChild(currentNode, direction)
     if a:currentNode.isRoot()
-        return nerdtree#echo("cannot jump to " . (a:direction ? "last" : "first") .  " child")
+        return mdtree#echo("cannot jump to " . (a:direction ? "last" : "first") .  " child")
     end
     let dirNode = a:currentNode.parent
     let childNodes = dirNode.getVisibleChildren()
@@ -393,10 +359,10 @@ function! s:jumpToChild(currentNode, direction)
 endfunction
 
 
-" FUNCTION: nerdtree#ui_glue#invokeKeyMap(key) {{{1
+" FUNCTION: mdtree#ui_glue#invokeKeyMap(key) {{{1
 "this is needed since I cant figure out how to invoke dict functions from a
 "key map
-function! nerdtree#ui_glue#invokeKeyMap(key)
+function! mdtree#ui_glue#invokeKeyMap(key)
     call g:MDTreeKeyMap.Invoke(a:key)
 endfunction
 
@@ -433,7 +399,7 @@ function! s:jumpToParent(node)
         call l:parent.putCursorHere(1, 0)
         call b:MDTree.ui.centerView()
     else
-        call nerdtree#echo('could not jump to parent node')
+        call mdtree#echo('could not jump to parent node')
     endif
 endfunction
 
@@ -469,14 +435,14 @@ function! s:jumpToSibling(currentNode, forward)
     endif
 endfunction
 
-" FUNCTION: nerdtree#ui_glue#openBookmark(name) {{{1
+" FUNCTION: mdtree#ui_glue#openBookmark(name) {{{1
 " Open the Bookmark that has the specified name. This function provides the
 " implementation for the ":OpenBookmark" command.
-function! nerdtree#ui_glue#openBookmark(name)
+function! mdtree#ui_glue#openBookmark(name)
     try
         let l:bookmark = g:MDTreeBookmark.BookmarkFor(a:name)
     catch /^MDTree.BookmarkNotFoundError/
-        call nerdtree#echoError('bookmark "' . a:name . '" not found')
+        call mdtree#echoError('bookmark "' . a:name . '" not found')
         return
     endtry
     if l:bookmark.path.isDirectory
@@ -515,11 +481,11 @@ endfunction
 
 " FUNCTION: s:openNodeRecursively(node) {{{1
 function! s:openNodeRecursively(node)
-    call nerdtree#echo("Recursively opening node. Please wait...")
+    call mdtree#echo("Recursively opening node. Please wait...")
     call a:node.openRecursively()
     call b:MDTree.render()
     redraw
-    call nerdtree#echo("Recursively opening node. Please wait... DONE")
+    call mdtree#echo("Recursively opening node. Please wait... DONE")
 endfunction
 
 "FUNCTION: s:previewNodeCurrent(node) {{{1
@@ -537,14 +503,14 @@ function! s:previewNodeVSplit(node)
     call a:node.open({'stay': 1, 'where': 'v', 'keepopen': 1})
 endfunction
 
-" FUNCTION: nerdtree#ui_glue#revealBookmark(name) {{{1
+" FUNCTION: mdtree#ui_glue#revealBookmark(name) {{{1
 " put the cursor on the node associate with the given name
-function! nerdtree#ui_glue#revealBookmark(name)
+function! mdtree#ui_glue#revealBookmark(name)
     try
         let targetNode = g:MDTreeBookmark.GetNodeForName(a:name, 0, b:MDTree)
         call targetNode.putCursorHere(0, 1)
     catch /^MDTree.BookmarkNotFoundError/
-        call nerdtree#echo("Bookmark isnt cached under the current root")
+        call mdtree#echo("Bookmark isnt cached under the current root")
     endtry
 endfunction
 
@@ -552,11 +518,11 @@ endfunction
 " Reloads the current root. All nodes below this will be lost and the root dir
 " will be reloaded.
 function! s:refreshRoot()
-    call nerdtree#echo("Refreshing the root node. This could take a while...")
+    call mdtree#echo("Refreshing the root node. This could take a while...")
     call b:MDTree.root.refresh()
     call b:MDTree.render()
     redraw
-    call nerdtree#echo("Refreshing the root node. This could take a while... DONE")
+    call mdtree#echo("Refreshing the root node. This could take a while... DONE")
 endfunction
 
 " FUNCTION: s:refreshCurrent(node) {{{1
@@ -567,23 +533,19 @@ function! s:refreshCurrent(node)
         let node = node.parent
     endif
 
-    call nerdtree#echo("Refreshing node. This could take a while...")
+    call mdtree#echo("Refreshing node. This could take a while...")
     call node.refresh()
     call b:MDTree.render()
     redraw
-    call nerdtree#echo("Refreshing node. This could take a while... DONE")
+    call mdtree#echo("Refreshing node. This could take a while... DONE")
 endfunction
 
-" FUNCTION: nerdtree#ui_glue#setupCommands() {{{1
-function! nerdtree#ui_glue#setupCommands()
-    command! -n=? -complete=dir -bar MDTree :call g:MDTreeCreator.CreateTabTree('<args>')
-    command! -n=? -complete=dir -bar MDTreeToggle :call g:MDTreeCreator.ToggleTabTree('<args>')
+" FUNCTION: mdtree#ui_glue#setupCommands() {{{1
+function! mdtree#ui_glue#setupCommands()
+    command! -n=? -bar MDTree :call g:MDTreeCreator.CreateTabTree('<args>')
+    command! -n=? -bar MDTreeToggle :call g:MDTreeCreator.ToggleTabTree('<args>')
     command! -n=0 -bar MDTreeClose :call g:MDTree.Close()
-    command! -n=1 -complete=customlist,nerdtree#completeBookmarks -bar MDTreeFromBookmark call g:MDTreeCreator.CreateTabTree('<args>')
-    command! -n=0 -bar MDTreeMirror call g:MDTreeCreator.CreateMirror()
-    command! -n=? -complete=file -bar MDTreeFind call s:findAndRevealPath('<args>')
     command! -n=0 -bar MDTreeFocus call MDTreeFocus()
-    command! -n=0 -bar MDTreeCWD call MDTreeCWD()
 endfunction
 
 " Function: s:SID()   {{{1
@@ -626,16 +588,16 @@ function! s:toggleZoom()
     call b:MDTree.ui.toggleZoom()
 endfunction
 
-"FUNCTION: nerdtree#ui_glue#upDir(keepState) {{{1
+"FUNCTION: mdtree#ui_glue#upDir(keepState) {{{1
 "moves the tree up a level
 "
 "Args:
 "keepState: 1 if the current root should be left open when the tree is
 "re-rendered
-function! nerdtree#ui_glue#upDir(keepState)
+function! mdtree#ui_glue#upDir(keepState)
     let cwd = b:MDTree.root.path.str({'format': 'UI'})
     if cwd ==# "/" || cwd =~# '^[^/]..$'
-        call nerdtree#echo("already at top dir")
+        call mdtree#echo("already at top dir")
     else
         if !a:keepState
             call b:MDTree.root.close()
@@ -664,12 +626,12 @@ endfunction
 
 " FUNCTION: s:upDirCurrentRootOpen() {{{1
 function! s:upDirCurrentRootOpen()
-    call nerdtree#ui_glue#upDir(1)
+    call mdtree#ui_glue#upDir(1)
 endfunction
 
 " FUNCTION: s:upDirCurrentRootClosed() {{{1
 function! s:upDirCurrentRootClosed()
-    call nerdtree#ui_glue#upDir(0)
+    call mdtree#ui_glue#upDir(0)
 endfunction
 
 " vim: set sw=4 sts=4 et fdm=marker:

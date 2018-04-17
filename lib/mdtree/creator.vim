@@ -17,15 +17,6 @@ function! s:Creator._bindMappings()
     nnoremap <silent> <buffer> <cr> :call nerdtree#ui_glue#invokeKeyMap(g:MDTreeMapActivateNode)<cr>
 
     call g:MDTreeKeyMap.BindAll()
-
-    command! -buffer -nargs=? Bookmark :call nerdtree#ui_glue#bookmarkNode('<args>')
-    command! -buffer -complete=customlist,nerdtree#completeBookmarks -nargs=1 RevealBookmark :call nerdtree#ui_glue#revealBookmark('<args>')
-    command! -buffer -complete=customlist,nerdtree#completeBookmarks -nargs=1 OpenBookmark call nerdtree#ui_glue#openBookmark('<args>')
-    command! -buffer -complete=customlist,nerdtree#completeBookmarks -nargs=* ClearBookmarks call nerdtree#ui_glue#clearBookmarks('<args>')
-    command! -buffer -complete=customlist,nerdtree#completeBookmarks -nargs=+ BookmarkToRoot call g:MDTreeBookmark.ToRoot('<args>', b:MDTree)
-    command! -buffer -nargs=0 ClearAllBookmarks call g:MDTreeBookmark.ClearAll() <bar> call b:MDTree.render()
-    command! -buffer -nargs=0 ReadBookmarks call g:MDTreeBookmark.CacheBookmarks(0) <bar> call b:MDTree.render()
-    command! -buffer -nargs=0 WriteBookmarks call g:MDTreeBookmark.Write()
 endfunction
 
 " FUNCTION: s:Creator._broadcastInitEvent() {{{1

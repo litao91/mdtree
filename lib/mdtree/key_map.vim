@@ -1,7 +1,7 @@
 "CLASS: KeyMap
 "============================================================
 let s:KeyMap = {}
-let g:NERDTreeKeyMap = s:KeyMap
+let g:MDTreeKeyMap = s:KeyMap
 
 "FUNCTION: KeyMap.All() {{{1
 function! s:KeyMap.All()
@@ -85,24 +85,24 @@ function! s:KeyMap.Invoke(key)
     "is in first
     "
     "TODO: remove this check when the vim bug is fixed
-    if !g:NERDTree.ExistsForBuf()
+    if !g:MDTree.ExistsForBuf()
         return {}
     endif
 
-    let node = g:NERDTreeFileNode.GetSelected()
+    let node = g:MDTreeNode.GetSelected()
     if !empty(node)
 
         "try file node
-        if !node.path.isDirectory
-            let km = s:KeyMap.FindFor(a:key, "FileNode")
+        if !node.path.isCategory
+            let km = s:KeyMap.FindFor(a:key, "CategoryNode")
             if !empty(km)
                 return km.invoke(node)
             endif
         endif
 
         "try dir node
-        if node.path.isDirectory
-            let km = s:KeyMap.FindFor(a:key, "DirNode")
+        if node.path.isArticle
+            let km = s:KeyMap.FindFor(a:key, "ArticleNode")
             if !empty(km)
                 return km.invoke(node)
             endif
@@ -114,15 +114,6 @@ function! s:KeyMap.Invoke(key)
             return km.invoke(node)
         endif
 
-    endif
-
-    "try bookmark
-    let bm = g:NERDTreeBookmark.GetSelected()
-    if !empty(bm)
-        let km = s:KeyMap.FindFor(a:key, "Bookmark")
-        if !empty(km)
-            return km.invoke(bm)
-        endif
     endif
 
     "try all

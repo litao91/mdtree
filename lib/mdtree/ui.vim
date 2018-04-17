@@ -4,7 +4,7 @@
 
 
 let s:UI = {}
-let g:NERDTreeUI = s:UI
+let g:MDTreeUI = s:UI
 
 " FUNCTION: s:UI.centerView() {{{2
 " centers the nerd tree window around the cursor (provided the nerd tree
@@ -369,7 +369,7 @@ endfunction
 function! s:UI._stripMarkup(line)
     let line = a:line
     " remove the tree parts and the leading space
-    let line = substitute (line, g:NERDTreeUI.MarkupReg(),"","")
+    let line = substitute (line, g:MDTreeUI.MarkupReg(),"","")
 
     " strip off any read only flag
     let line = substitute (line, ' \['.g:NERDTreeGlyphReadOnly.'\]', "","")
