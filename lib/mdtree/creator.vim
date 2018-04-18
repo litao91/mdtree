@@ -18,6 +18,8 @@ function! s:Creator.createTabTree(name)
     if empty(l:path)
         return
     endif
+
+    call self._createTreeWin()
 endfunction
 
 " FUNCTION: s:Creator.ToggleTabTree(dir) {{{1
@@ -30,8 +32,8 @@ endfunction
 " Init the window. ie. opens it, sizes it, sets all the local
 " options etc
 function! s:Creator._createTreeWin()
-    let splitLocation = g:NERDTreeWinPos ==# "left" ? "topleft " : "botright "
-    let splitSize = g:NERDTreeSize
+    let splitLocation = g:MDTreeWinPos ==# "left" ? "topleft " : "botright "
+    let splitSize = g:MDTreeWinSize
 
     if !g:MDTree.ExistsForTab()
         let t:MDTreeBufName = self._nextBufferName()
@@ -42,7 +44,7 @@ function! s:Creator._createTreeWin()
         silent! exec "buffer " . t:MDTreeBufName
     endif
     setlocal winfixwidth
-    call self._setCommandBufOptions()
+    call self._setCommonBufOptions()
 endfunction
 
 " FUNCTION: s:Creator._setCommonBufOptions() {{{1
