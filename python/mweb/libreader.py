@@ -19,6 +19,9 @@ class MainLib(object):
             results = conn.execute("SELECT uuid, name FROM cat where pid='0'")
             return [Category(i[0], i[1]) for i in results]
 
+    def categories_str(self):
+        return [c.name for c in self.categories()]
+
     def sub_cat(self, cat):
         with sqlite3.connect(self.db_file) as conn:
             results = conn.execute("SELECT uuid, name FROM cat WHERE pid=?",

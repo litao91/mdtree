@@ -25,6 +25,17 @@ call s:initVariable("g:MDTreeGlyphReadonly", "RO")
 
 call s:initVariable("g:MDTreeWinPos", "left")
 call s:initVariable("g:MDTreeWinSize", 31)
+call s:initVariable("g:MDTreeLibName", "mainlib.db")
+let g:plugin_path = expand('<sfile>:p:h')
+
+python3 << EOF
+import vim
+import sys
+import os
+plugin_path = vim.eval('g:plugin_path')
+python_module_path = os.path.abspath('%s/../python' % (plugin_path,))
+sys.path.append(python_module_path)
+EOF
 
 if !exists("g:MDTreeSortOrder")
     let g:MDTreeSortOrder = ['\/$', '*', '\.swp$', '\.bak$', '\~$']

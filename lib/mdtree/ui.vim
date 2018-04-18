@@ -290,7 +290,7 @@ function! s:UI.render()
     silent 1,$delete _
 
     " draw the header line
-    let header = self.mdtree.root.path.str({'format': 'UI', 'truncateTo': winwidth(0)})
+    let header = self.mdtree.root.path.pathStr
     call setline(line(".")+1, header)
     call cursor(line(".")+1, col("."))
 

@@ -552,9 +552,8 @@ endfunction
 " FUNCTION: Path.New(pathStr) {{{1
 function! s:Path.New(pathStr)
     let l:newPath = copy(self)
-
-    call l:newPath.readInfoFromDisk(s:Path.AbsolutePathFor(a:pathStr))
-
+    let l:newPath.pathStr = s:Path.AbsolutePathFor(a:pathStr)
+    call l:newPath.readInfoFromDisk(l:newPath.pathStr)
     let l:newPath.cachedDisplayString = ''
     let l:newPath.flagSet = g:MDTreeFlagSet.New()
 
