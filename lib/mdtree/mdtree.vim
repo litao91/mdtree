@@ -44,19 +44,19 @@ function! s:MDTree.Close()
         let l:useWinId = exists('*win_getid') && exists('*win_gotoid')
 
         if winnr() == s:MDTree.GetWinNum()
-            call nerdtree#exec("wincmd p")
+            call mdtree#exec("wincmd p")
             let l:activeBufOrWin = l:useWinId ? win_getid() : bufnr("")
-            call nerdtree#exec("wincmd p")
+            call mdtree#exec("wincmd p")
         else
             let l:activeBufOrWin = l:useWinId ? win_getid() : bufnr("")
         endif
 
-        call nerdtree#exec(s:MDTree.GetWinNum() . " wincmd w")
+        call mdtree#exec(s:MDTree.GetWinNum() . " wincmd w")
         close
         if l:useWinId
-            call nerdtree#exec("call win_gotoid(" . l:activeBufOrWin . ")")
+            call mdtree#exec("call win_gotoid(" . l:activeBufOrWin . ")")
         else
-            call nerdtree#exec(bufwinnr(l:activeBufOrWin) . " wincmd w")
+            call mdtree#exec(bufwinnr(l:activeBufOrWin) . " wincmd w")
         endif
     else
         close
