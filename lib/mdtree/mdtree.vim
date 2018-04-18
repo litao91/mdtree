@@ -177,7 +177,7 @@ endfunction
 function! s:MDTree.New(path, type)
     let newObj = copy(self)
     let newObj.ui = g:MDTreeUI.New(newObj)
-    let newObj.root = g:MDTreeDirNode.New(a:path, newObj)
+    let newObj.root = g:MDTreeRootNode.New(a:path, newObj)
     let newObj._type = a:type
     return newObj
 endfunction

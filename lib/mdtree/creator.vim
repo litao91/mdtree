@@ -19,7 +19,37 @@ function! s:Creator.createTabTree(name)
         return
     endif
 
+    if g:MDTree.ExistsForTab()
+        call g:MDTree.Close()
+        call self._removeTreeBufForTab()
+    endif
     call self._createTreeWin()
+    call self._createMDTree(l:path, 'tab')
+    call b:MDTree.render()
+endfunction
+
+function! s:Creator._createMDTree(path, type)
+    let b:MDTree = g:MDTree.New(a:path, a:type)
+    let b:MDTreeRoot = b:MDTree.root
+
+    call b:MDTree.root.open()
+endfunction
+
+function! s:Creator._removeTreeBufForTab()
+    let buf = bufnr(t:MDTreeBufName)
+    if buf != -1
+        if self._isBufHidden(buf)
+            exec "bwipeout " . buf
+        endif
+    endif
+    unlet t:MDTreeBufName
+endfunction
+
+function! s:Creator._isBufHidden(nr)
+    redir => bufs
+    silent ls!
+    redir END
+    return bufs =~a:nr . '..h'
 endfunction
 
 " FUNCTION: s:Creator.ToggleTabTree(dir) {{{1
@@ -111,7 +141,18 @@ endfunction
 " dir: the full path for the root node (is only used if the NERD tree is being
 " initialized.
 function! s:Creator.toggleTabTree(dir)
-    call self.createTabTree(a:dir)
+    if g:MDTree.ExistsForTab()
+        if !g:MDTree.IsOpen()
+            call self._createTreeWin()
+            if !&hidden
+                call b:MDTree.render()
+            endif
+        else
+            call g:MDTree.Close()
+        endif
+    else
+        call self.createTabTree(a:dir)
+    endif
 endfunction
 
 " Function: s:Creator._uniq(list)   {{{1

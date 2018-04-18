@@ -1,48 +1,48 @@
 " ============================================================================
-" CLASS: TreeDirNode
+" CLASS: TreeCatNode
 "
-" A subclass of NERDTreeFileNode.
+" A subclass of mdtreeFileNode.
 "
 " The 'composite' part of the file/dir composite.
 " ============================================================================
 
 
-let s:TreeDirNode = copy(g:NERDTreeFileNode)
-let g:NERDTreeDirNode = s:TreeDirNode
+let s:TreeCatNode = copy(g:MDTreeArticleNode)
+let g:MDTreeCatNode = s:TreeCatNode
 
-" FUNCTION: TreeDirNode.AbsoluteTreeRoot(){{{1
+" FUNCTION: TreeCatNode.AbsoluteTreeRoot(){{{1
 " Class method that returns the highest cached ancestor of the current root.
-function! s:TreeDirNode.AbsoluteTreeRoot()
-    let currentNode = b:NERDTree.root
+function! s:TreeCatNode.AbsoluteTreeRoot()
+    let currentNode = b:mdtree.root
     while currentNode.parent != {}
         let currentNode = currentNode.parent
     endwhile
     return currentNode
 endfunction
 
-" FUNCTION: TreeDirNode.activate([options]) {{{1
-function! s:TreeDirNode.activate(...)
+" FUNCTION: TreeCatNode.activate([options]) {{{1
+function! s:TreeCatNode.activate(...)
     let l:options = (a:0 > 0) ? a:1 : {}
 
     call self.toggleOpen(l:options)
 
-    " Note that we only re-render the NERDTree for this node if we did NOT
+    " Note that we only re-render the mdtree for this node if we did NOT
     " create a new node and render it in a new window or tab.  In the latter
-    " case, rendering the NERDTree for this node could overwrite the text of
-    " the new NERDTree!
+    " case, rendering the mdtree for this node could overwrite the text of
+    " the new mdtree!
     if !has_key(l:options, 'where') || empty(l:options['where'])
-        call self.getNerdtree().render()
+        call self.getmdtree().render()
         call self.putCursorHere(0, 0)
     endif
 endfunction
 
-" FUNCTION: TreeDirNode.addChild(treenode, inOrder) {{{1
+" FUNCTION: TreeCatNode.addChild(treenode, inOrder) {{{1
 " Adds the given treenode to the list of children for this node
 "
 " Args:
 " -treenode: the node to add
 " -inOrder: 1 if the new node should be inserted in sorted order
-function! s:TreeDirNode.addChild(treenode, inOrder)
+function! s:TreeCatNode.addChild(treenode, inOrder)
     call add(self.children, a:treenode)
     let a:treenode.parent = self
 
@@ -51,9 +51,9 @@ function! s:TreeDirNode.addChild(treenode, inOrder)
     endif
 endfunction
 
-" FUNCTION: TreeDirNode.close() {{{1
-" Mark this TreeDirNode as closed.
-function! s:TreeDirNode.close()
+" FUNCTION: TreeCatNode.close() {{{1
+" Mark this TreeCatNode as closed.
+function! s:TreeCatNode.close()
 
     " Close all directories in this directory node's cascade. This is
     " necessary to ensure consistency when cascades are rendered.
@@ -62,9 +62,9 @@ function! s:TreeDirNode.close()
     endfor
 endfunction
 
-" FUNCTION: TreeDirNode.closeChildren() {{{1
+" FUNCTION: TreeCatNode.closeChildren() {{{1
 " Recursively close any directory nodes that are descendants of this node.
-function! s:TreeDirNode.closeChildren()
+function! s:TreeCatNode.closeChildren()
     for l:child in self.children
         if l:child.path.isDirectory
             call l:child.close()
@@ -73,7 +73,7 @@ function! s:TreeDirNode.closeChildren()
     endfor
 endfunction
 
-" FUNCTION: TreeDirNode.createChild(path, inOrder) {{{1
+" FUNCTION: TreeCatNode.createChild(path, inOrder) {{{1
 " Instantiates a new child node for this node with the given path. The new
 " nodes parent is set to this node.
 "
@@ -83,19 +83,19 @@ endfunction
 "
 " Returns:
 " the newly created node
-function! s:TreeDirNode.createChild(path, inOrder)
-    let newTreeNode = g:NERDTreeFileNode.New(a:path, self.getNerdtree())
+function! s:TreeCatNode.createChild(path, inOrder)
+    let newTreeNode = g:mdtreeFileNode.New(a:path, self.getmdtree())
     call self.addChild(newTreeNode, a:inOrder)
     return newTreeNode
 endfunction
 
-" FUNCTION: TreeDirNode.displayString() {{{1
-" Assemble and return a string that can represent this TreeDirNode object in
-" the NERDTree window.
-function! s:TreeDirNode.displayString()
+" FUNCTION: TreeCatNode.displayString() {{{1
+" Assemble and return a string that can represent this TreeCatNode object in
+" the mdtree window.
+function! s:TreeCatNode.displayString()
     let l:result = ''
 
-    " Build a label that identifies this TreeDirNode.
+    " Build a label that identifies this TreeCatNode.
     let l:label = ''
     let l:cascade = self.getCascade()
     for l:dirNode in l:cascade
@@ -104,9 +104,9 @@ function! s:TreeDirNode.displayString()
 
     " Select the appropriate open/closed status indicator symbol.
     if l:cascade[-1].isOpen
-        let l:symbol = g:NERDTreeDirArrowCollapsible
+        let l:symbol = g:mdtreeDirArrowCollapsible
     else
-        let l:symbol = g:NERDTreeDirArrowExpandable
+        let l:symbol = g:mdtreeDirArrowExpandable
     endif
 
     let l:flags = l:cascade[-1].path.flagSet.renderToString()
@@ -115,13 +115,13 @@ function! s:TreeDirNode.displayString()
     return l:result
 endfunction
 
-" FUNCTION: TreeDirNode.findNode(path) {{{1
+" FUNCTION: TreeCatNode.findNode(path) {{{1
 " Will find one of the children (recursively) that has the given path
 "
 " Args:
 " path: a path object
-unlet s:TreeDirNode.findNode
-function! s:TreeDirNode.findNode(path)
+unlet s:TreeCatNode.findNode
+function! s:TreeCatNode.findNode(path)
     if a:path.equals(self.path)
         return self
     endif
@@ -140,9 +140,9 @@ function! s:TreeDirNode.findNode(path)
     return {}
 endfunction
 
-" FUNCTION: TreeDirNode.getCascade() {{{1
+" FUNCTION: TreeCatNode.getCascade() {{{1
 " Return an array of dir nodes (starting from self) that can be cascade opened.
-function! s:TreeDirNode.getCascade()
+function! s:TreeCatNode.getCascade()
     if !self.isCascadable()
         return [self]
     endif
@@ -153,13 +153,13 @@ function! s:TreeDirNode.getCascade()
     return [self] + visChild.getCascade()
 endfunction
 
-" FUNCTION: TreeDirNode.getChildCount() {{{1
+" FUNCTION: TreeCatNode.getChildCount() {{{1
 " Returns the number of children this node has
-function! s:TreeDirNode.getChildCount()
+function! s:TreeCatNode.getChildCount()
     return len(self.children)
 endfunction
 
-" FUNCTION: TreeDirNode.getChild(path) {{{1
+" FUNCTION: TreeCatNode.getChild(path) {{{1
 " Returns child node of this node that has the given path or {} if no such node
 " exists.
 "
@@ -167,7 +167,7 @@ endfunction
 "
 " Args:
 " path: a path object
-function! s:TreeDirNode.getChild(path)
+function! s:TreeCatNode.getChild(path)
     if stridx(a:path.str(), self.path.str(), 0) ==# -1
         return {}
     endif
@@ -181,22 +181,22 @@ function! s:TreeDirNode.getChild(path)
 
 endfunction
 
-" FUNCTION: TreeDirNode.getChildByIndex(indx, visible) {{{1
+" FUNCTION: TreeCatNode.getChildByIndex(indx, visible) {{{1
 " returns the child at the given index
 "
 " Args:
 " indx: the index to get the child from
 " visible: 1 if only the visible children array should be used, 0 if all the
 " children should be searched.
-function! s:TreeDirNode.getChildByIndex(indx, visible)
+function! s:TreeCatNode.getChildByIndex(indx, visible)
     let array_to_search = a:visible? self.getVisibleChildren() : self.children
     if a:indx > len(array_to_search)
-        throw "NERDTree.InvalidArgumentsError: Index is out of bounds."
+        throw "mdtree.InvalidArgumentsError: Index is out of bounds."
     endif
     return array_to_search[a:indx]
 endfunction
 
-" FUNCTION: TreeDirNode.getChildIndex(path) {{{1
+" FUNCTION: TreeCatNode.getChildIndex(path) {{{1
 " Returns the index of the child node of this node that has the given path or
 " -1 if no such node exists.
 "
@@ -204,7 +204,7 @@ endfunction
 "
 " Args:
 " path: a path object
-function! s:TreeDirNode.getChildIndex(path)
+function! s:TreeCatNode.getChildIndex(path)
     if stridx(a:path.str(), self.path.str(), 0) ==# -1
         return -1
     endif
@@ -227,9 +227,9 @@ function! s:TreeDirNode.getChildIndex(path)
     return -1
 endfunction
 
-" FUNCTION: TreeDirNode._glob(pattern, all) {{{1
+" FUNCTION: TreeCatNode._glob(pattern, all) {{{1
 " Return a list of strings naming the descendants of the directory in this
-" TreeDirNode object that match the specified glob pattern.
+" TreeCatNode object that match the specified glob pattern.
 "
 " Args:
 " pattern: (string) the glob pattern to apply
@@ -240,7 +240,7 @@ endfunction
 " they are returned as pathnames relative to that directory. This is because
 " this function, internally, attempts to obey 'wildignore' rules that use
 " relative paths.
-function! s:TreeDirNode._glob(pattern, all)
+function! s:TreeCatNode._glob(pattern, all)
 
     " Construct a path specification such that "globpath()" will return
     " relative pathnames, if possible.
@@ -250,7 +250,7 @@ function! s:TreeDirNode._glob(pattern, all)
         let l:pathSpec = fnamemodify(self.path.str({'format': 'Glob'}), ':.')
 
         " On Windows, the drive letter may be removed by "fnamemodify()".
-        if nerdtree#runningWindows() && l:pathSpec[0] == g:NERDTreePath.Slash()
+        if mdtree#runningWindows() && l:pathSpec[0] == g:mdtreePath.Slash()
             let l:pathSpec = self.path.drive . l:pathSpec
         endif
     endif
@@ -260,11 +260,11 @@ function! s:TreeDirNode._glob(pattern, all)
     " See ":h version7.txt" and ":h version8.txt" for details on the
     " development of the "glob()" and "globpath()" functions.
     if v:version > 704 || (v:version == 704 && has('patch654'))
-        let l:globList = globpath(l:pathSpec, a:pattern, !g:NERDTreeRespectWildIgnore, 1, 0)
+        let l:globList = globpath(l:pathSpec, a:pattern, !g:mdtreeRespectWildIgnore, 1, 0)
     elseif v:version == 704 && has('patch279')
-        let l:globList = globpath(l:pathSpec, a:pattern, !g:NERDTreeRespectWildIgnore, 1)
+        let l:globList = globpath(l:pathSpec, a:pattern, !g:mdtreeRespectWildIgnore, 1)
     elseif v:version > 702 || (v:version == 702 && has('patch051'))
-        let l:globString = globpath(l:pathSpec, a:pattern, !g:NERDTreeRespectWildIgnore)
+        let l:globString = globpath(l:pathSpec, a:pattern, !g:mdtreeRespectWildIgnore)
         let l:globList = split(l:globString, "\n")
     else
         let l:globString = globpath(l:pathSpec, a:pattern)
@@ -299,12 +299,12 @@ function! s:TreeDirNode._glob(pattern, all)
     return l:globList
 endfunction
 
-" FUNCTION: TreeDirNode.GetSelected() {{{1
+" FUNCTION: TreeCatNode.GetSelected() {{{1
 " Returns the current node if it is a dir node, or else returns the current
 " nodes parent
-unlet s:TreeDirNode.GetSelected
-function! s:TreeDirNode.GetSelected()
-    let currentDir = g:NERDTreeFileNode.GetSelected()
+unlet s:TreeCatNode.GetSelected
+function! s:TreeCatNode.GetSelected()
+    let currentDir = g:mdtreeFileNode.GetSelected()
     if currentDir != {} && !currentDir.isRoot()
         if currentDir.path.isDirectory ==# 0
             let currentDir = currentDir.parent
@@ -313,37 +313,37 @@ function! s:TreeDirNode.GetSelected()
     return currentDir
 endfunction
 
-" FUNCTION: TreeDirNode.getVisibleChildCount() {{{1
+" FUNCTION: TreeCatNode.getVisibleChildCount() {{{1
 " Returns the number of visible children this node has
-function! s:TreeDirNode.getVisibleChildCount()
+function! s:TreeCatNode.getVisibleChildCount()
     return len(self.getVisibleChildren())
 endfunction
 
-" FUNCTION: TreeDirNode.getVisibleChildren() {{{1
+" FUNCTION: TreeCatNode.getVisibleChildren() {{{1
 " Returns a list of children to display for this node, in the correct order
 "
 " Return:
 " an array of treenodes
-function! s:TreeDirNode.getVisibleChildren()
+function! s:TreeCatNode.getVisibleChildren()
     let toReturn = []
     for i in self.children
-        if i.path.ignore(self.getNerdtree()) ==# 0
+        if i.path.ignore(self.getmdtree()) ==# 0
             call add(toReturn, i)
         endif
     endfor
     return toReturn
 endfunction
 
-" FUNCTION: TreeDirNode.hasVisibleChildren() {{{1
+" FUNCTION: TreeCatNode.hasVisibleChildren() {{{1
 " returns 1 if this node has any childre, 0 otherwise..
-function! s:TreeDirNode.hasVisibleChildren()
+function! s:TreeCatNode.hasVisibleChildren()
     return self.getVisibleChildCount() != 0
 endfunction
 
-" FUNCTION: TreeDirNode.isCascadable() {{{1
+" FUNCTION: TreeCatNode.isCascadable() {{{1
 " true if this dir has only one visible child - which is also a dir
-function! s:TreeDirNode.isCascadable()
-    if g:NERDTreeCascadeSingleChildDir == 0
+function! s:TreeCatNode.isCascadable()
+    if g:mdtreeCascadeSingleChildDir == 0
         return 0
     endif
 
@@ -351,7 +351,7 @@ function! s:TreeDirNode.isCascadable()
     return len(c) == 1 && c[0].path.isDirectory
 endfunction
 
-" FUNCTION: TreeDirNode._initChildren() {{{1
+" FUNCTION: TreeCatNode._initChildren() {{{1
 " Removes all childen from this node and re-reads them
 "
 " Args:
@@ -359,48 +359,48 @@ endfunction
 " large directories
 "
 " Return: the number of child nodes read
-function! s:TreeDirNode._initChildren(silent)
+function! s:TreeCatNode._initChildren(silent)
     "remove all the current child nodes
     let self.children = []
 
     let files = self._glob('*', 1) + self._glob('.*', 0)
 
-    if !a:silent && len(files) > g:NERDTreeNotificationThreshold
-        call nerdtree#echo("Please wait, caching a large dir ...")
+    if !a:silent && len(files) > g:mdtreeNotificationThreshold
+        call mdtree#echo("Please wait, caching a large dir ...")
     endif
 
     let invalidFilesFound = 0
     for i in files
         try
-            let path = g:NERDTreePath.New(i)
+            let path = g:mdtreePath.New(i)
             call self.createChild(path, 0)
-            call g:NERDTreePathNotifier.NotifyListeners('init', path, self.getNerdtree(), {})
-        catch /^NERDTree.\(InvalidArguments\|InvalidFiletype\)Error/
+            call g:mdtreePathNotifier.NotifyListeners('init', path, self.getmdtree(), {})
+        catch /^mdtree.\(InvalidArguments\|InvalidFiletype\)Error/
             let invalidFilesFound += 1
         endtry
     endfor
 
     call self.sortChildren()
 
-    if !a:silent && len(files) > g:NERDTreeNotificationThreshold
-        call nerdtree#echo("Please wait, caching a large dir ... DONE (". self.getChildCount() ." nodes cached).")
+    if !a:silent && len(files) > g:mdtreeNotificationThreshold
+        call mdtree#echo("Please wait, caching a large dir ... DONE (". self.getChildCount() ." nodes cached).")
     endif
 
     if invalidFilesFound
-        call nerdtree#echoWarning(invalidFilesFound . " file(s) could not be loaded into the NERD tree")
+        call mdtree#echoWarning(invalidFilesFound . " file(s) could not be loaded into the NERD tree")
     endif
     return self.getChildCount()
 endfunction
 
-" FUNCTION: TreeDirNode.New(path, nerdtree) {{{1
-" Return a new TreeDirNode object with the given path and parent.
+" FUNCTION: TreeCatNode.New(path, mdtree) {{{1
+" Return a new TreeCatNode object with the given path and parent.
 "
 " Args:
 " path: dir that the node represents
-" nerdtree: the tree the node belongs to
-function! s:TreeDirNode.New(path, nerdtree)
+" mdtree: the tree the node belongs to
+function! s:TreeCatNode.New(path, mdtree)
     if a:path.isDirectory != 1
-        throw "NERDTree.InvalidArgumentsError: A TreeDirNode object must be instantiated with a directory Path object."
+        throw "mdtree.InvalidArgumentsError: A TreeCatNode object must be instantiated with a directory Path object."
     endif
 
     let newTreeNode = copy(self)
@@ -410,21 +410,21 @@ function! s:TreeDirNode.New(path, nerdtree)
     let newTreeNode.children = []
 
     let newTreeNode.parent = {}
-    let newTreeNode._nerdtree = a:nerdtree
+    let newTreeNode._mdtree = a:mdtree
 
     return newTreeNode
 endfunction
 
-" FUNCTION: TreeDirNode.open([options]) {{{1
+" FUNCTION: TreeCatNode.open([options]) {{{1
 " Open this directory node in the current tree or elsewhere if special options
 " are provided. Return 0 if options were processed. Otherwise, return the
 " number of new cached nodes.
-function! s:TreeDirNode.open(...)
+function! s:TreeCatNode.open(...)
     let l:options = a:0 ? a:1 : {}
 
     " If special options were specified, process them and return.
     if has_key(l:options, 'where') && !empty(l:options['where'])
-        let l:opener = g:NERDTreeOpener.New(self.path, l:options)
+        let l:opener = g:mdtreeOpener.New(self.path, l:options)
         call l:opener.open(self)
         return 0
     endif
@@ -450,11 +450,11 @@ function! s:TreeDirNode.open(...)
     return l:numChildrenCached
 endfunction
 
-" FUNCTION: TreeDirNode.openAlong([opts]) {{{1
+" FUNCTION: TreeCatNode.openAlong([opts]) {{{1
 " recursive open the dir if it has only one directory child.
 "
 " return the level of opened directories.
-function! s:TreeDirNode.openAlong(...)
+function! s:TreeCatNode.openAlong(...)
     let opts = a:0 ? a:1 : {}
     let level = 0
 
@@ -471,42 +471,42 @@ function! s:TreeDirNode.openAlong(...)
     return level
 endfunction
 
-" FUNCTION: TreeDirNode.openExplorer() {{{1
+" FUNCTION: TreeCatNode.openExplorer() {{{1
 " Open an explorer window for this node in the previous window. The explorer
-" can be a NERDTree window or a netrw window.
-function! s:TreeDirNode.openExplorer()
+" can be a mdtree window or a netrw window.
+function! s:TreeCatNode.openExplorer()
     call self.open({'where': 'p'})
 endfunction
 
-" FUNCTION: TreeDirNode.openInNewTab(options) {{{1
-unlet s:TreeDirNode.openInNewTab
-function! s:TreeDirNode.openInNewTab(options)
-    call nerdtree#deprecated('TreeDirNode.openInNewTab', 'is deprecated, use open() instead')
+" FUNCTION: TreeCatNode.openInNewTab(options) {{{1
+unlet s:TreeCatNode.openInNewTab
+function! s:TreeCatNode.openInNewTab(options)
+    call mdtree#deprecated('TreeCatNode.openInNewTab', 'is deprecated, use open() instead')
     call self.open({'where': 't'})
 endfunction
 
-" FUNCTION: TreeDirNode._openInNewTab() {{{1
-function! s:TreeDirNode._openInNewTab()
+" FUNCTION: TreeCatNode._openInNewTab() {{{1
+function! s:TreeCatNode._openInNewTab()
     tabnew
-    call g:NERDTreeCreator.CreateTabTree(self.path.str())
+    call g:mdtreeCreator.CreateTabTree(self.path.str())
 endfunction
 
-" FUNCTION: TreeDirNode.openRecursively() {{{1
+" FUNCTION: TreeCatNode.openRecursively() {{{1
 " Open this directory node and any descendant directory nodes whose pathnames
 " are not ignored.
-function! s:TreeDirNode.openRecursively()
+function! s:TreeCatNode.openRecursively()
     silent call self.open()
 
     for l:child in self.children
-        if l:child.path.isDirectory && !l:child.path.ignore(l:child.getNerdtree())
+        if l:child.path.isDirectory && !l:child.path.ignore(l:child.getmdtree())
             call l:child.openRecursively()
         endif
     endfor
 endfunction
 
-" FUNCTION: TreeDirNode.refresh() {{{1
-function! s:TreeDirNode.refresh()
-    call self.path.refresh(self.getNerdtree())
+" FUNCTION: TreeCatNode.refresh() {{{1
+function! s:TreeCatNode.refresh()
+    call self.path.refresh(self.getmdtree())
 
     "if this node was ever opened, refresh its children
     if self.isOpen || !empty(self.children)
@@ -516,7 +516,7 @@ function! s:TreeDirNode.refresh()
         for i in files
             try
                 "create a new path and see if it exists in this nodes children
-                let path = g:NERDTreePath.New(i)
+                let path = g:mdtreePath.New(i)
                 let newNode = self.getChild(path)
                 if newNode != {}
                     call newNode.refresh()
@@ -524,11 +524,11 @@ function! s:TreeDirNode.refresh()
 
                 "the node doesnt exist so create it
                 else
-                    let newNode = g:NERDTreeFileNode.New(path, self.getNerdtree())
+                    let newNode = g:mdtreeFileNode.New(path, self.getmdtree())
                     let newNode.parent = self
                     call add(newChildNodes, newNode)
                 endif
-            catch /^NERDTree.\(InvalidArguments\|InvalidFiletype\)Error/
+            catch /^mdtree.\(InvalidArguments\|InvalidFiletype\)Error/
                 let invalidFilesFound = 1
             endtry
         endfor
@@ -538,34 +538,34 @@ function! s:TreeDirNode.refresh()
         call self.sortChildren()
 
         if invalidFilesFound
-            call nerdtree#echoWarning("some files could not be loaded into the NERD tree")
+            call mdtree#echoWarning("some files could not be loaded into the NERD tree")
         endif
     endif
 endfunction
 
-" FUNCTION: TreeDirNode.refreshFlags() {{{1
-unlet s:TreeDirNode.refreshFlags
-function! s:TreeDirNode.refreshFlags()
-    call self.path.refreshFlags(self.getNerdtree())
+" FUNCTION: TreeCatNode.refreshFlags() {{{1
+unlet s:TreeCatNode.refreshFlags
+function! s:TreeCatNode.refreshFlags()
+    call self.path.refreshFlags(self.getmdtree())
     for i in self.children
         call i.refreshFlags()
     endfor
 endfunction
 
-" FUNCTION: TreeDirNode.refreshDirFlags() {{{1
-function! s:TreeDirNode.refreshDirFlags()
-    call self.path.refreshFlags(self.getNerdtree())
+" FUNCTION: TreeCatNode.refreshDirFlags() {{{1
+function! s:TreeCatNode.refreshDirFlags()
+    call self.path.refreshFlags(self.getmdtree())
 endfunction
 
-" FUNCTION: TreeDirNode.reveal(path) {{{1
+" FUNCTION: TreeCatNode.reveal(path) {{{1
 " reveal the given path, i.e. cache and open all treenodes needed to display it
 " in the UI
 " Returns the revealed node
-function! s:TreeDirNode.reveal(path, ...)
+function! s:TreeCatNode.reveal(path, ...)
     let opts = a:0 ? a:1 : {}
 
     if !a:path.isUnder(self.path)
-        throw "NERDTree.InvalidArgumentsError: " . a:path.str() . " should be under " . self.path.str()
+        throw "mdtree.InvalidArgumentsError: " . a:path.str() . " should be under " . self.path.str()
     endif
 
     call self.open()
@@ -587,13 +587,13 @@ function! s:TreeDirNode.reveal(path, ...)
     return n.reveal(a:path, opts)
 endfunction
 
-" FUNCTION: TreeDirNode.removeChild(treenode) {{{1
+" FUNCTION: TreeCatNode.removeChild(treenode) {{{1
 " Remove the given treenode from "self.children".
-" Throws "NERDTree.ChildNotFoundError" if the node is not found.
+" Throws "mdtree.ChildNotFoundError" if the node is not found.
 "
 " Args:
 " treenode: the node object to remove
-function! s:TreeDirNode.removeChild(treenode)
+function! s:TreeCatNode.removeChild(treenode)
     for i in range(0, self.getChildCount()-1)
         if self.children[i].equals(a:treenode)
             call remove(self.children, i)
@@ -601,24 +601,24 @@ function! s:TreeDirNode.removeChild(treenode)
         endif
     endfor
 
-    throw "NERDTree.ChildNotFoundError: child node was not found"
+    throw "mdtree.ChildNotFoundError: child node was not found"
 endfunction
 
-" FUNCTION: TreeDirNode.sortChildren() {{{1
+" FUNCTION: TreeCatNode.sortChildren() {{{1
 " Sort "self.children" by alphabetical order and directory priority.
-function! s:TreeDirNode.sortChildren()
-    let CompareFunc = function("nerdtree#compareNodesBySortKey")
+function! s:TreeCatNode.sortChildren()
+    let CompareFunc = function("mdtree#compareNodesBySortKey")
     call sort(self.children, CompareFunc)
 endfunction
 
-" FUNCTION: TreeDirNode.toggleOpen([options]) {{{1
+" FUNCTION: TreeCatNode.toggleOpen([options]) {{{1
 " Opens this directory if it is closed and vice versa
-function! s:TreeDirNode.toggleOpen(...)
+function! s:TreeCatNode.toggleOpen(...)
     let opts = a:0 ? a:1 : {}
     if self.isOpen ==# 1
         call self.close()
     else
-        if g:NERDTreeCascadeOpenSingleChildDir == 0
+        if g:mdtreeCascadeOpenSingleChildDir == 0
             call self.open(opts)
         else
             call self.openAlong(opts)
@@ -626,14 +626,14 @@ function! s:TreeDirNode.toggleOpen(...)
     endif
 endfunction
 
-" FUNCTION: TreeDirNode.transplantChild(newNode) {{{1
+" FUNCTION: TreeCatNode.transplantChild(newNode) {{{1
 " Replaces the child of this with the given node (where the child node's full
 " path matches a:newNode's fullpath). The search for the matching node is
 " non-recursive
 "
 " Arg:
 " newNode: the node to graft into the tree
-function! s:TreeDirNode.transplantChild(newNode)
+function! s:TreeCatNode.transplantChild(newNode)
     for i in range(0, self.getChildCount()-1)
         if self.children[i].equals(a:newNode)
             let self.children[i] = a:newNode
