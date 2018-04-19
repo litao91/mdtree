@@ -26,6 +26,9 @@ call s:initVariable("g:MDTreeGlyphReadonly", "RO")
 call s:initVariable("g:MDTreeWinPos", "left")
 call s:initVariable("g:MDTreeWinSize", 31)
 call s:initVariable("g:MDTreeLibName", "mainlib.db")
+call s:initVariable("g:MDTreeDirArrowExpandable", "▸")
+call s:initVariable("g:MDTreeDirArrowCollapsible", "▾")
+
 let g:plugin_path = expand('<sfile>:p:h')
 
 python3 << EOF

@@ -34,6 +34,7 @@ function! mdtree#loadClassFiles()
     runtime lib/mdtree/mdtree.vim
     runtime lib/mdtree/ui.vim
     runtime lib/mdtree/tree_root_node.vim
+    runtime lib/mdtree/tree_cat_node.vim
 endfunction
 
 "FUNCTION: mdtree#runningWindows(dir) {{{2

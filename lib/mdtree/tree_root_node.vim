@@ -39,8 +39,8 @@ function! s:TreeRootNode._initChildren(silent)
 python3 << EOF
 from mweb import libreader
 reader = libreader.MainLib(vim.eval("self.libname"))
-categories = reader.categories_str()
-cat_str = ",".join('"' + c + '"' for c in categories)
+categories = reader.categories()
+cat_str = ",".join('g:MDTreeCatNode.New("%s", "%s", self._mdtree)' % (c.name, c.uuid) for c in categories)
 vim.command('let self.children = [%s]' % cat_str)
 EOF
     return self.getChildCount()
@@ -58,9 +58,18 @@ endfunction
 function! s:TreeRootNode._renderToString(depth, drawText)
     let output = ""
     if a:drawText ==# 1
-        let treeParts = ('  ', a:depth - 1)
+        let treeParts = repeat('  ', a:depth - 1)
         let line = treeParts . self.displayString()
         let output = output . line . "\n"
+    endif
+
+    if self.isOpen ==# 1
+        let childNodesToDraw = self.children
+        if len(childNodesToDraw) > 0
+            for i in childNodesToDraw
+                let output = output . i._renderToString(a:depth + 1, 1)
+            endfor
+        endif
     endif
     return output
 endfunction

@@ -22,10 +22,10 @@ class MainLib(object):
     def categories_str(self):
         return [c.name for c in self.categories()]
 
-    def sub_cat(self, cat):
+    def sub_cat(self, cat_uuid):
         with sqlite3.connect(self.db_file) as conn:
             results = conn.execute("SELECT uuid, name FROM cat WHERE pid=?",
-                                  (cat.uuid,))
+                                  (cat_uuid,))
             return [Category(i[0], i[1]) for i in results]
 
     def add_cat(self, cat_name):
