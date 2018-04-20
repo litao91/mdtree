@@ -72,9 +72,8 @@ endfunction
 "Find a keymapping for a:key and the current scope invoke it.
 "
 "Scope is determined as follows:
-"   * if the cursor is on a dir node then "DirNode"
-"   * if the cursor is on a file node then "FileNode"
-"   * if the cursor is on a bookmark then "Bookmark"
+"   * if the cursor is on a cat node then "CatNode"
+"   * if the cursor is on a file node then "ArticleNode"
 "
 "If a keymap has the scope of "all" then it will be called if no other keymap
 "is found for a:key and the scope.
@@ -89,31 +88,16 @@ function! s:KeyMap.Invoke(key)
         return {}
     endif
 
-    let node = g:MDTreeNode.GetSelected()
+    let node = g:MDTreeRootNode.GetCurRoot().GetSelected()
     if !empty(node)
 
         "try file node
-        if !node.path.isCategory
+        if node.isCategory
             let km = s:KeyMap.FindFor(a:key, "CategoryNode")
             if !empty(km)
                 return km.invoke(node)
             endif
         endif
-
-        "try dir node
-        if node.path.isArticle
-            let km = s:KeyMap.FindFor(a:key, "ArticleNode")
-            if !empty(km)
-                return km.invoke(node)
-            endif
-        endif
-
-        "try generic node
-        let km = s:KeyMap.FindFor(a:key, "Node")
-        if !empty(km)
-            return km.invoke(node)
-        endif
-
     endif
 
     "try all

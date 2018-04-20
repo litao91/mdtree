@@ -11,7 +11,11 @@
 let s:Creator = {}
 let g:MDTreeCreator = s:Creator
 
-
+function! s:Creator._bindMappings()
+    nnoremap <silent> <buffer> <cr> :call mdtree#ui_glue#invokeKeyMap(g:MDTreeMapActivateNode)<cr>
+    call g:MDTreeKeyMap.BindAll()
+endfunction
+    
 function! s:Creator.createTabTree(name)
     let l:path = self._pathForString(a:name)
 
@@ -93,9 +97,10 @@ function! s:Creator._setCommonBufOptions()
     iabc <buffer>
     setlocal cursorline
     " call self._setupStatusline()
-    " call self._bindMappings()
+    call self._bindMappings()
     setlocal filetype=mdtree
 endfunction
+
 
 " FUNCTION: s:Creator.New() {{{1
 function! s:Creator.New()

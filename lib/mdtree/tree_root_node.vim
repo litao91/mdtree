@@ -5,14 +5,18 @@ function! s:TreeRootNode.New(path, mdtree)
     if a:path.isDirectory != 1
         throw "mdtree.InvalidArgumentsError: A TreeRoot object must be instantiated with a directory path object. "
     endif
-
     let newRootNode = copy(self)
     let newRootNode.path = a:path
     let newRootNode.isOpen = 0
     let newRootNode.children = []
     let newRootNode._mdtree = a:mdtree
     let newRootNode.libname = newRootNode.path.pathStr . "/" . g:MDTreeLibName
+    let t:root = newRootNode
     return newRootNode
+endfunction
+
+function! s:TreeRootNode.GetCurRoot()
+    return t:root
 endfunction
 
 
@@ -73,3 +77,22 @@ function! s:TreeRootNode._renderToString(depth, drawText)
     endif
     return output
 endfunction
+
+function! s:TreeRootNode.findNode(uuid)
+    for i in self.children
+        let retVal = i.findNode(a:uuid)
+        if retVal != {}
+            return retVal
+        endif
+    endfor
+    return {}
+endfunction
+
+function! s:TreeRootNode.GetSelected()
+    let l:curline = getline(line('.'))
+    let l:uuid = split(l:curline, "|")[1]
+    return self.findNode(l:uuid)
+endfunction
+
+
+

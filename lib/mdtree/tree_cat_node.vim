@@ -16,6 +16,7 @@ function! s:TreeCatNode.New(name, uuid, mdtree)
     let newTreeNode._mdtree = a:mdtree
     let newTreeNode.isOpen = 0
     let newTreeNode.children = []
+    let newTreeNode.isCategory = 1
     return newTreeNode
 endfunction
 
@@ -66,7 +67,7 @@ function! s:TreeCatNode.displayString()
         let l:symbol = g:MDTreeDirArrowExpandable
     endif
 
-    let l:result = l:symbol . l:label
+    let l:result = l:symbol . l:label . '|' . self.uuid
     return l:result
 endfunction
 
@@ -88,4 +89,21 @@ function! s:TreeCatNode._renderToString(depth, drawText)
         endif
     endif
     return output
+endfunction
+
+function! s:TreeCatNode.findNode(uuid)
+    echo "Finding" . a:uuid
+    if a:uuid == self.uuid
+        return self
+    endif
+    if empty(self.children)
+        return {}
+    endif
+    for i in self.children
+        let retVal = i.findNode(a:uuid)
+        if retVal != {}
+            return retVal
+        endif
+    endfor
+    return {}
 endfunction

@@ -28,6 +28,7 @@ call s:initVariable("g:MDTreeWinSize", 31)
 call s:initVariable("g:MDTreeLibName", "mainlib.db")
 call s:initVariable("g:MDTreeDirArrowExpandable", "▸")
 call s:initVariable("g:MDTreeDirArrowCollapsible", "▾")
+call s:initVariable("g:MDTreeMapActivateNode", "o")
 
 let g:plugin_path = expand('<sfile>:p:h')
 
@@ -48,7 +49,12 @@ else
     endif
 endif
 
+function! MDTreeAddKeyMap(options)
+    call g:MDTreeKeyMap.Create(a:options)
+endfunction
+
 call mdtree#loadClassFiles()
 call mdtree#ui_glue#setupCommands()
+call mdtree#postSourceActions()
 
 let &cpo = s:old_cpo

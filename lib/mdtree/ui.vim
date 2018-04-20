@@ -316,7 +316,7 @@ endfunction
 " Renders the tree and ensures the cursor stays on the current node or the
 " current nodes parent if it is no longer available upon re-rendering
 function! s:UI.renderViewSavingPosition()
-    let currentNode = g:mdtreeFileNode.GetSelected()
+    let currentNode = g:MDTreeRootNode.GetSelected()
 
     " go up the tree till we find a node that will be visible or till we run
     " out of nodes
