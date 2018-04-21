@@ -9,6 +9,11 @@ class Category(object):
         self.uuid = uuid
 
 
+class Article(object):
+    def __init__(self, uuid):
+        self.title = uuid
+        self.uuid = uuid
+
 
 class MainLib(object):
     def __init__(self, db_file):
@@ -27,6 +32,17 @@ class MainLib(object):
             results = conn.execute("SELECT uuid, name FROM cat WHERE pid=?",
                                   (cat_uuid,))
             return [Category(i[0], i[1]) for i in results]
+
+    def articles(self, cat_uuid):
+        with sqlite3.connect(self.db_file) as conn:
+            results = conn.execute(
+                """
+                SELECT article.uuid FROM cat
+                LEFT JOIN cat_article ON cat.uuid = cat_article.rid
+                LEFT JOIN article on cat_article.aid = article.uuid
+                WHERE cat.uuid = ?;
+                """, (cat_uuid,))
+            return [Article(i[0]) for i in results]
 
     def add_cat(self, cat_name):
         conn = sqlite3.connect(self.db_file)
@@ -74,7 +90,3 @@ class MainLib(object):
             conn.rollback()
         finally:
             conn.close()
-
-
-    def articles(self, cat):
-        pass
