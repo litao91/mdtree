@@ -28,9 +28,12 @@ class MainLib(object):
 
     def get_article_title(self, uuid):
         doc_file = os.path.join(self.docs_dir, str(uuid) + '.md')
-        with open(doc_file, encoding='utf-8') as f:
-            first_line = f.readline()
-            return first_line.strip(' ').strip('#').strip(' ').strip('\n')
+        try:
+            with open(doc_file, encoding='utf-8') as f:
+                first_line = f.readline()
+                return first_line.strip(' ').strip('#').strip(' ').strip('\n')
+        except:
+            return 'None'
 
     def categories_str(self):
         return [c.name for c in self.categories()]

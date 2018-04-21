@@ -35,7 +35,8 @@ python_module_path = os.path.abspath('%s/../python' % (plugin_path,))
 sys.path.append(python_module_path)
 reader = libreader.MainLib(vim.eval("self._mdtree.libname"))
 sub_cats =['g:MDTreeCatNode.New("%s", "%s", self._mdtree)' % (c.name, c.uuid) for c in reader.sub_cat(vim.eval('self.uuid'))]
-cmd = 'let l:sub_cats = [%s]' % ','.join(sub_cats)
+articles = ['g:MDTreeArticleNode.New("%s", "%s", self._mdtree)' % (a.title, str(a.uuid)) for a in reader.articles(vim.eval('self.uuid'))]
+cmd = 'let l:sub_cats = [%s]' % ','.join(sub_cats + articles)
 vim.command(cmd)
 EOF
     if empty(l:sub_cats)
@@ -52,8 +53,8 @@ function! s:TreeCatNode.getChildCount()
 endfunction
 
 function! s:TreeCatNode.addChild(node)
-    call add(self.children, a:node)
     let a:node.parent = self
+    call add(self.children, a:node)
 endfunction
 
 function! s:TreeCatNode.open()

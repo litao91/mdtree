@@ -35,6 +35,7 @@ function! mdtree#loadClassFiles()
     runtime lib/mdtree/ui.vim
     runtime lib/mdtree/tree_root_node.vim
     runtime lib/mdtree/tree_cat_node.vim
+    runtime lib/mdtree/tree_article_node.vim
     runtime lib/mdtree/key_map.vim
 endfunction
 
