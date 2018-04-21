@@ -32,15 +32,6 @@ call s:initVariable("g:MDTreeMapActivateNode", "o")
 
 let g:plugin_path = expand('<sfile>:p:h')
 
-python3 << EOF
-import vim
-import sys
-import os
-plugin_path = vim.eval('g:plugin_path')
-python_module_path = os.path.abspath('%s/../python' % (plugin_path,))
-sys.path.append(python_module_path)
-EOF
-
 if !exists("g:MDTreeSortOrder")
     let g:MDTreeSortOrder = ['\/$', '*', '\.swp$', '\.bak$', '\~$']
 else

@@ -10,7 +10,7 @@ function! mdtree#ui_glue#createDefaultBindings()
 endfunction
 
 function! s:activateCatNode(catNode)
-    echo "activateCatNode" . a:catNode.uuid
+    call a:catNode.activate()
 endfunction
 
 function! mdtree#ui_glue#invokeKeyMap(key)

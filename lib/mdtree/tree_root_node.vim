@@ -10,7 +10,7 @@ function! s:TreeRootNode.New(path, mdtree)
     let newRootNode.isOpen = 0
     let newRootNode.children = []
     let newRootNode._mdtree = a:mdtree
-    let newRootNode.libname = newRootNode.path.pathStr . "/" . g:MDTreeLibName
+    let newRootNode._mdtree.libname = newRootNode.path.pathStr . "/" . g:MDTreeLibName
     let t:root = newRootNode
     return newRootNode
 endfunction
@@ -41,8 +41,14 @@ endfunction
 function! s:TreeRootNode._initChildren(silent)
     let self.children = []
 python3 << EOF
+import vim
+import sys
+import os
+plugin_path = vim.eval('g:plugin_path')
+python_module_path = os.path.abspath('%s/../python' % (plugin_path,))
+sys.path.append(python_module_path)
 from mweb import libreader
-reader = libreader.MainLib(vim.eval("self.libname"))
+reader = libreader.MainLib(vim.eval("self._mdtree.libname"))
 categories = reader.categories()
 cat_str = ",".join('g:MDTreeCatNode.New("%s", "%s", self._mdtree)' % (c.name, c.uuid) for c in categories)
 vim.command('let self.children = [%s]' % cat_str)
