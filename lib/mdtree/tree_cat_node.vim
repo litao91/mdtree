@@ -94,12 +94,9 @@ function! s:TreeCatNode._renderToString(depth, drawText)
     endif
 
     if self.isOpen ==# 1
-        let childNodesToDraw = self.children
-        if len(childNodesToDraw) > 0
-            for i in childNodesToDraw
-                "let output = output . i._renderToString(a:depth + 1, 1)
-            endfor
-        endif
+        for i in self.children
+            let output = output . i._renderToString(a:depth + 1, 1)
+        endfor
     endif
     return output
 endfunction

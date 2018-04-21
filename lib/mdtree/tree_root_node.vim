@@ -73,14 +73,9 @@ function! s:TreeRootNode._renderToString(depth, drawText)
         let output = output . line . "\n"
     endif
 
-    if self.isOpen ==# 1
-        let childNodesToDraw = self.children
-        if len(childNodesToDraw) > 0
-            for i in childNodesToDraw
-                let output = output . i._renderToString(a:depth + 1, 1)
-            endfor
-        endif
-    endif
+    for i in self.children
+        let output = output . i._renderToString(a:depth + 1, 1)
+    endfor
     return output
 endfunction
 
