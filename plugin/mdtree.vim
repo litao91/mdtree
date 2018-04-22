@@ -29,6 +29,7 @@ call s:initVariable("g:MDTreeLibName", "mainlib.db")
 call s:initVariable("g:MDTreeDirArrowExpandable", "▸")
 call s:initVariable("g:MDTreeDirArrowCollapsible", "▾")
 call s:initVariable("g:MDTreeMapActivateNode", "o")
+call s:initVariable("g:MDTreeQuitOnOpen", 0)
 
 let g:plugin_path = expand('<sfile>:p:h')
 

@@ -7,10 +7,15 @@ let g:loaded_mdtree_ui_glue_autoload = 1
 function! mdtree#ui_glue#createDefaultBindings()
     let s = '<SNR>' . s:SID() . '_'
     call MDTreeAddKeyMap({'key': g:MDTreeMapActivateNode, 'scope': "CategoryNode", 'callback': s."activateCatNode"})
+    call MDTreeAddKeyMap({'key': g:MDTreeMapActivateNode, 'scope': "ArticleNode", 'callback': s."activateArticleNode"})
 endfunction
 
 function! s:activateCatNode(catNode)
     call a:catNode.activate()
+endfunction
+
+function! s:activateArticleNode(node)
+    call a:node.activate({'reuse': 'all', 'where': 'p'})
 endfunction
 
 function! mdtree#ui_glue#invokeKeyMap(key)

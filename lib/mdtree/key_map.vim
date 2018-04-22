@@ -97,6 +97,11 @@ function! s:KeyMap.Invoke(key)
             if !empty(km)
                 return km.invoke(node)
             endif
+        else
+            let km = s:KeyMap.FindFor(a:key, "ArticleNode")
+            if !empty(km)
+                return km.invoke(node)
+            endif
         endif
     endif
 
