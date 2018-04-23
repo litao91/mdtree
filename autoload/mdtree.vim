@@ -88,6 +88,11 @@ function! mdtree#echoWarning(msg)
     echohl warningmsg
     call mdtree#echo(a:msg)
     echohl normal
+
+endfunction
+
+function! mdtree#renderView()
+    call b:MDTree.render()
 endfunction
 
 " vim: set sw=4 sts=4 et fdm=marker:

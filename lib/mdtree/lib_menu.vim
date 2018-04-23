@@ -35,10 +35,8 @@ if new_node_name[-1] == '/':
     new_node_name = new_node_name[0:len(new_node_name)-1]
     uuid = str(reader.add_cat(pid, new_node_name))
     vim.command('let uuid = ' + uuid)
-    cmd = 'let newNode = g:MDTreeCatNode.New("%s", "%s", curCatNode)' % (new_node_name, uuid)
+    cmd = 'let newNode = g:MDTreeCatNode.New("%s", "%s", parentNode)' % (new_node_name, uuid)
     vim.command(cmd)
 EOF
-echo newNode.uuid
-echo newNode.name
 endfunction
 

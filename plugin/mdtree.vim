@@ -52,6 +52,10 @@ function! MDTreeAddMenuItem(options)
     call g:MDTreeMenuItem.Create(a:options)
 endfunction
 
+function! MDTreeRender()
+    call mdtree#renderView()
+endfunction
+
 call mdtree#loadClassFiles()
 call mdtree#ui_glue#setupCommands()
 call mdtree#postSourceActions()
