@@ -99,3 +99,36 @@ class MainLib(object):
             conn.rollback()
         finally:
             conn.close()
+
+    def add_article(self, pid):
+        conn = sqlite3.connect(self.db_file)
+        uuid = int(time.time() * 10000)
+        now = int(time.time())
+        try:
+            c = conn.cursor()
+            c.execute(
+                """
+        INSERT INTO article(
+                uuid,
+                "type",
+                state,
+                sort,
+                dateAdd,
+                dateModif,
+                dateArt,
+                docName,
+                otherMedia,
+                buildResource,
+                postExtValue)
+            VALUES
+                (?, 0, 1, ?, ?, ?, ?, '', '', '', '');
+                """, (uuid, uuid, now, now, now))
+            c.execute(
+                "INSERT INTO cat_article(rid, aid)VALUES(?, ?);", (pid, uuid))
+            conn.commit()
+            return uuid
+        except:
+            logger.exception("Error")
+            conn.rollback()
+        finally:
+            conn.close()
