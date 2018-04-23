@@ -90,5 +90,6 @@ function! s:TreeRootNode.GetSelected()
     return self.findNode(l:uuid)
 endfunction
 
-
-
+function! s:TreeRootNode.refresh()
+    call self._initChildren()
+endfunction

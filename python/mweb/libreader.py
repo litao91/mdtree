@@ -39,7 +39,7 @@ class MainLib(object):
         with sqlite3.connect(self.db_file) as conn:
             results = conn.execute("SELECT uuid, name FROM cat WHERE pid=?",
                                   (cat_uuid,))
-            return [Category(i[0], i[1]) for i in results]
+            return [Category(i[0], i[1]) for i in results if i[0] is not None]
 
     def articles(self, cat_uuid):
         with sqlite3.connect(self.db_file) as conn:
@@ -50,9 +50,10 @@ class MainLib(object):
                 LEFT JOIN article on cat_article.aid = article.uuid
                 WHERE cat.uuid = ?;
                 """, (cat_uuid,))
-            return [Article(i[0], self.docs_dir) for i in results]
+            return [Article(i[0], self.docs_dir) for i in results
+                    if i[0] is not None]
 
-    def add_cat(self, cat_name):
+    def add_cat(self, pid, cat_name):
         conn = sqlite3.connect(self.db_file)
         uuid = int(time.time() * 10000)
         try:
@@ -88,9 +89,9 @@ class MainLib(object):
                   siteEnableLaTeX,
                   siteEnableChart)
                 VALUES
-                 (0,?,?,'',12,1,0,'','',0,'','','','',0,0,'','','','','','',
+                 (?,?,?,'',12,1,0,'','',0,'','','','',0,0,'','','','','','',
                 '','','',0,0)
-                """, (uuid, cat_name))
+                """, (pid, uuid, cat_name))
             conn.commit()
             return uuid
         except:
