@@ -45,3 +45,5 @@ function! s:TreeArticleNode.open(...)
 endfunction
 
     
+function! s:TreeArticleNode.delete()
+endfunction

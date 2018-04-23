@@ -38,9 +38,6 @@ class MainLib(object):
             results = conn.execute("SELECT uuid, name FROM cat where pid='0'")
             return [Category(i[0], i[1]) for i in results]
 
-    def categories_str(self):
-        return [c.name for c in self.categories()]
-
     def sub_cat(self, cat_uuid):
         with sqlite3.connect(self.db_file) as conn:
             results = conn.execute("SELECT uuid, name FROM cat WHERE pid=?",
@@ -135,6 +132,34 @@ class MainLib(object):
             return Article(uuid, self.docs_dir, title)
         except:
             logger.excption("Error")
+            conn.rollback()
+        finally:
+            conn.close()
+
+    def del_article(self, article_uuid):
+        article = Article(article_uuid, self.docs_dir)
+        conn = sqlite3.connect(self.db_file)
+        try:
+            c = conn.cursor()
+            c.execute("DELETE from cat_article WHERE aid = ?", (article_uuid,))
+            c.execute("DELETE from article WHERE uuid = ?", (article_uuid,))
+            os.remove(article.path)
+            conn.commit()
+        except:
+            logger.exception("Error")
+            conn.rollback()
+        finally:
+            conn.close()
+
+    def del_cat(self, cat_uuid):
+        conn = sqlite3.connect(self.db_file)
+        try:
+            c = conn.cursor()
+            c.execute("DELETE from cat_article WHERE rid = ?", (cat_uuid,))
+            c.execute("DELETE from cat WHERE uuid = ?", (cat_uuid,))
+            conn.commit()
+        except:
+            logger.exception("Error")
             conn.rollback()
         finally:
             conn.close()

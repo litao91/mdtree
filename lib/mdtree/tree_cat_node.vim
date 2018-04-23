@@ -123,6 +123,14 @@ function! s:TreeCatNode.activate()
     call self._mdtree.render()
 endfunction
 
+function! s:TreeCatNode.delete()
+    for i in self.children
+        call i.delete()
+    endfor
+python3 << EOF
+EOF
+endfunction
+
 function! s:TreeCatNode.toggleOpen()
     if self.isOpen ==# 1
         call self.close()

@@ -44,3 +44,23 @@ call parentNode.addChild(newNode)
 call MDTreeRender()
 endfunction
 
+function! MDTreeDeleteNode()
+    let curNode = b:MDTree.root.GetSelected()
+    let confirmed = 0
+    if curNode.isCategory && curNode.isOpen ==# 0
+        call curNode.open()
+    endif
+    if curNode.isCategory && curNode.getChildCount() > 0
+        let choice = input("Cat is not empty! To delete, type yes\n")
+        let confirmed = choice ==# 'yes'
+    else
+        echo "Delete the current Node (yN):"
+        let choice = nr2char(getchar())
+        let confirmed = choice ==# 'y'
+    endif
+
+    if confirmed
+        call curNode.delete()
+        call MDTreeRender()
+    endif
+endfunction
