@@ -11,12 +11,7 @@ function! s:TreeRootNode.New(path, mdtree)
     let newRootNode.children = []
     let newRootNode._mdtree = a:mdtree
     let newRootNode._mdtree.libname = newRootNode.path.pathStr . "/" . g:MDTreeLibName
-    let t:root = newRootNode
     return newRootNode
-endfunction
-
-function! s:TreeRootNode.GetCurRoot()
-    return t:root
 endfunction
 
 

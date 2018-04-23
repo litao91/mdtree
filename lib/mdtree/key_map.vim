@@ -88,7 +88,7 @@ function! s:KeyMap.Invoke(key)
         return {}
     endif
 
-    let node = g:MDTreeRootNode.GetCurRoot().GetSelected()
+    let node = b:MDTree.root.GetSelected()
     if !empty(node)
 
         "try file node
