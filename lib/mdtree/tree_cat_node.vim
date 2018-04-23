@@ -128,6 +128,14 @@ function! s:TreeCatNode.delete()
         call i.delete()
     endfor
 python3 << EOF
+import vim
+import sys
+import os
+plugin_path = vim.eval('g:plugin_path')
+python_module_path = os.path.abspath('%s/../python' % (plugin_path,))
+sys.path.append(python_module_path)
+reader = libreader.MainLib(vim.eval("self._mdtree.libname"))
+reader.del_cat(vim.eval("self.uuid"))
 EOF
 endfunction
 

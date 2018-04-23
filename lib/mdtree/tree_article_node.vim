@@ -46,4 +46,15 @@ endfunction
 
     
 function! s:TreeArticleNode.delete()
+python3 << EOF
+import vim
+import sys
+import os
+plugin_path = vim.eval('g:plugin_path')
+python_module_path = os.path.abspath('%s/../python' % (plugin_path,))
+sys.path.append(python_module_path)
+reader = libreader.MainLib(vim.eval("self._mdtree.libname"))
+uuid = vim.eval('self.uuid')
+reader.del_article(uuid)
+EOF
 endfunction
