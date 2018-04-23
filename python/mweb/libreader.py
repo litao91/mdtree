@@ -11,13 +11,19 @@ class Category(object):
 
 
 class Article(object):
-    def __init__(self, uuid, docs_dir):
+    def __init__(self, uuid, docs_dir, title=None):
         self.uuid = uuid
         self.path = os.path.join(docs_dir, str(uuid) + '.md')
         try:
-            with open(self.path, encoding='utf-8') as f:
-                first_line = f.readline()
-                self.title = first_line.strip(' ').strip('#').strip(' ').strip('\n')
+            if os.path.exists(self.path):
+                with open(self.path, encoding='utf-8') as f:
+                    first_line = f.readline()
+                    self.title = first_line.strip(
+                        ' ').strip('#').strip(' ').strip('\n')
+            else:
+                with open(self.path, 'a', encoding='utf-8') as f:
+                    f.write('# ' + title + '\n')
+                self.title = title
         except:
             self.title = 'None'
 
@@ -100,7 +106,7 @@ class MainLib(object):
         finally:
             conn.close()
 
-    def add_article(self, pid):
+    def add_article(self, pid, title):
         conn = sqlite3.connect(self.db_file)
         uuid = int(time.time() * 10000)
         now = int(time.time())
@@ -126,9 +132,9 @@ class MainLib(object):
             c.execute(
                 "INSERT INTO cat_article(rid, aid)VALUES(?, ?);", (pid, uuid))
             conn.commit()
-            return uuid
+            return Article(uuid, self.docs_dir, title)
         except:
-            logger.exception("Error")
+            logger.excption("Error")
             conn.rollback()
         finally:
             conn.close()

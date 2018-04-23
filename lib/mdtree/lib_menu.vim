@@ -34,9 +34,11 @@ pid = vim.eval('parentNode.uuid')
 if new_node_name[-1] == '/':
     new_node_name = new_node_name[0:len(new_node_name)-1]
     uuid = str(reader.add_cat(pid, new_node_name))
-    vim.command('let uuid = ' + uuid)
     cmd = 'let newNode = g:MDTreeCatNode.New("%s", "%s", b:MDTree)' % (new_node_name, uuid)
     vim.command(cmd)
+else:
+    article = reader.add_article(pid, new_node_name)
+    vim.command('let newNode = g:MDTreeArticleNode.New("%s", "%d", "%s", b:MDTree)' % (article.title, article.uuid, article.path))
 EOF
 call parentNode.addChild(newNode)
 call MDTreeRender()
