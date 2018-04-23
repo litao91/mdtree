@@ -32,7 +32,7 @@ endfunction
 
 " FUNCTION: mdtree#ui_glue#setupCommands() {{{1
 function! mdtree#ui_glue#setupCommands()
-    command! -n=? -complete=dir -bar MDTree :call g:MDTreeCreator.CreateTabTree('<args>')
+    " command! -n=? -complete=dir -bar MDTree :call g:MDTreeCreator.CreateTabTree('<args>')
     command! -n=? -complete=dir -bar MDTreeToggle :call g:MDTreeCreator.ToggleTabTree('<args>')
 endfunction
 
