@@ -1,7 +1,7 @@
 "CLASS: MenuItem
 "============================================================
 let s:MenuItem = {}
-let g:NERDTreeMenuItem = s:MenuItem
+let g:MDTreeMenuItem = s:MenuItem
 
 "FUNCTION: MenuItem.All() {{{1
 "get all top level menu items
@@ -90,7 +90,7 @@ endfunction
 "callback
 function! s:MenuItem.execute()
     if len(self.children)
-        let mc = g:NERDTreeMenuController.New(self.children)
+        let mc = g:MDTreeMenuController.New(self.children)
         call mc.showMenu()
     else
         if self.callback != -1

@@ -30,6 +30,7 @@ call s:initVariable("g:MDTreeDirArrowExpandable", "▸")
 call s:initVariable("g:MDTreeDirArrowCollapsible", "▾")
 call s:initVariable("g:MDTreeMapActivateNode", "o")
 call s:initVariable("g:MDTreeQuitOnOpen", 0)
+call s:initVariable("g:MDTreeMapMenu", "m")
 
 let g:plugin_path = expand('<sfile>:p:h')
 
@@ -41,8 +42,14 @@ else
     endif
 endif
 
+" SECTION: Public API {{{1
+" =======================================================================
 function! MDTreeAddKeyMap(options)
     call g:MDTreeKeyMap.Create(a:options)
+endfunction
+
+function! MDTreeAddMenuItem(options)
+    call g:MDTreeMenuItem.Create(a:options)
 endfunction
 
 call mdtree#loadClassFiles()

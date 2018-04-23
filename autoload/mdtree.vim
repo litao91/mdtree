@@ -28,6 +28,8 @@ endfunction
 
 " FUNCTION: mdtree#loadClassFiles() {{{2
 function! mdtree#loadClassFiles()
+    runtime lib/mdtree/menu_controller.vim
+    runtime lib/mdtree/menu_item.vim
     runtime lib/mdtree/creator.vim
     runtime lib/mdtree/path.vim
     runtime lib/mdtree/flag_set.vim
@@ -38,6 +40,7 @@ function! mdtree#loadClassFiles()
     runtime lib/mdtree/tree_article_node.vim
     runtime lib/mdtree/key_map.vim
     runtime lib/mdtree/opener.vim
+    runtime lib/mdtree/lib_menu.vim
 endfunction
 
 function! mdtree#postSourceActions()

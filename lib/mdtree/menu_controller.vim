@@ -1,7 +1,7 @@
 "CLASS: MenuController
 "============================================================
 let s:MenuController = {}
-let g:NERDTreeMenuController = s:MenuController
+let g:MDTreeMenuController = s:MenuController
 
 "FUNCTION: MenuController.New(menuItems) {{{1
 "create a new menu controller that operates on the given menu items
@@ -43,7 +43,7 @@ endfunction
 
 "FUNCTION: MenuController._echoPrompt() {{{1
 function! s:MenuController._echoPrompt()
-    echo "NERDTree Menu. Use j/k/enter and the shortcuts indicated"
+    echo "MDTree Menu. Use j/k/enter and the shortcuts indicated"
     echo "=========================================================="
 
     for i in range(0, len(self.menuItems)-1)
