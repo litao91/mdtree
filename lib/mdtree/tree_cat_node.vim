@@ -137,6 +137,7 @@ sys.path.append(python_module_path)
 reader = libreader.MainLib(vim.eval("self._mdtree.libname"))
 reader.del_cat(vim.eval("self.uuid"))
 EOF
+    call self.parent.removeChild(self)
 endfunction
 
 function! s:TreeCatNode.toggleOpen()
@@ -147,4 +148,11 @@ function! s:TreeCatNode.toggleOpen()
     endif
 endfunction
 
-
+function! s:TreeCatNode.removeChild(treenode)
+    for i in range(0, self.getChildCount() - 1)
+        if self.children[i].uuid == a:treenode.uuid
+            call remove(self.children, i)
+            return
+        endif
+    endfor
+endfunction

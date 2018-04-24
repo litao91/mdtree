@@ -61,7 +61,6 @@ function! MDTreeDeleteNode()
 
     if confirmed
         call curNode.delete()
-        call b:MDTree.refresh()
         call MDTreeRender()
     endif
 endfunction

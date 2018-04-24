@@ -57,4 +57,5 @@ reader = libreader.MainLib(vim.eval("self._mdtree.libname"))
 uuid = vim.eval('self.uuid')
 reader.del_article(uuid)
 EOF
+    call self.parent.removeChild(self)
 endfunction

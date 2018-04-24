@@ -48,6 +48,9 @@ categories = reader.categories()
 cat_str = ",".join('g:MDTreeCatNode.New("%s", "%s", self._mdtree)' % (c.name, c.uuid) for c in categories)
 vim.command('let self.children = [%s]' % cat_str)
 EOF
+    for i in self.children
+        let i.parent = self
+    endfor
     return self.getChildCount()
 endfunction
 
@@ -92,4 +95,13 @@ endfunction
 
 function! s:TreeRootNode.refresh()
     call self._initChildren()
+endfunction
+
+function! s:TreeRootNode.removeChild(treenode)
+    for i in range(0, self.getChildCount() - 1)
+        if self.children[i].uuid == a:treenode.uuid
+            call remove(self.children, i)
+            return
+        endif
+    endfor
 endfunction
