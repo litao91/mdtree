@@ -21,8 +21,8 @@ function! s:initVariable(var, value)
     return 0
 endfunction
 
+"SECTION: Init varialbe calls for key mappings {{{2
 call s:initVariable("g:MDTreeGlyphReadonly", "RO")
-
 call s:initVariable("g:MDTreeWinPos", "left")
 call s:initVariable("g:MDTreeWinSize", 31)
 call s:initVariable("g:MDTreeLibName", "mainlib.db")
@@ -31,6 +31,9 @@ call s:initVariable("g:MDTreeDirArrowCollapsible", "▾")
 call s:initVariable("g:MDTreeMapActivateNode", "o")
 call s:initVariable("g:MDTreeQuitOnOpen", 0)
 call s:initVariable("g:MDTreeMapMenu", "m")
+call s:initVariable("g:MDTreeMapOpenInTab", "t")
+call s:initVariable("g:MDTreeMapOpenSplit", "i")
+call s:initVariable("g:MDTreeMapOpenVSplit", "s")
 
 let g:plugin_path = expand('<sfile>:p:h')
 
@@ -42,7 +45,8 @@ else
     endif
 endif
 
-" SECTION: Public API {{{1
+
+" SECTION: Public API {{{2
 " =======================================================================
 function! MDTreeAddKeyMap(options)
     call g:MDTreeKeyMap.Create(a:options)

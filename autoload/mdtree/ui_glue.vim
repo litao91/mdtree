@@ -9,6 +9,7 @@ function! mdtree#ui_glue#createDefaultBindings()
     call MDTreeAddKeyMap({'key': g:MDTreeMapActivateNode, 'scope': "CategoryNode", 'callback': s."activateCatNode"})
     call MDTreeAddKeyMap({'key': g:MDTreeMapActivateNode, 'scope': "ArticleNode", 'callback': s."activateArticleNode"})
     call MDTreeAddKeyMap({'key': g:MDTreeMapMenu, 'scope': "Node", 'callback': s."showMenu"})
+    call MDTreeAddKeyMap({'key': g:MDTreeMapOpenInTab, 'scope': "Node", 'callback': s.'openInNewTab'})
 endfunction
 
 function! s:activateCatNode(catNode)
@@ -22,6 +23,11 @@ endfunction
 function! s:showMenu(node)
     let mc = g:MDTreeMenuController.New(g:MDTreeMenuItem.AllEnabled())
     call mc.showMenu()
+endfunction
+
+function! s:openInNewTab(target)
+    let l:opener = g:MDTreeOpener.New(a:target.path, {'where': 't'})
+    call l:opener.open(a:target)
 endfunction
 
 function! mdtree#ui_glue#invokeKeyMap(key)
