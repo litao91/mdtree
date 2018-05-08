@@ -4,10 +4,21 @@ import logging
 import os
 logger = logging.getLogger(__name__)
 
+MD_INDENT=4
+
 class Category(object):
     def __init__(self, uuid, name):
         self.name = name
         self.uuid = uuid
+
+    def genSummaryLine(self, depth, reader):
+        template = ' ' * (depth * MD_INDENT) + '* [{title}]()'
+        line = template.format(title=self.name)
+        sub_cats = reader.sub_cat(self.uuid)
+        articles = reader.articles(self.uuid)
+        return line + '\n' \
+            + '\n'.join(i.genSummaryLine(depth+1,reader) for i in sub_cats) \
+            + '\n'.join(i.genSummaryLine(depth+1) for i in articles)
 
 
 class Article(object):
@@ -26,6 +37,11 @@ class Article(object):
                 self.title = title
         except:
             self.title = 'None'
+
+    def genSummaryLine(self, depth):
+        template = ' ' * (depth * MD_INDENT) + '* [{title}](docs/{file})'
+        return template.format(title=self.title, file=str(self.uuid)+'.md')
+
 
 
 class MainLib(object):
@@ -163,3 +179,6 @@ class MainLib(object):
             conn.rollback()
         finally:
             conn.close()
+
+    def gen_summary(self):
+        return '\n'.join(i.genSummaryLine(0, self) for i in self.categories())
