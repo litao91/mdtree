@@ -12,7 +12,10 @@ class Category(object):
         self.uuid = uuid
 
     def genSummaryLine(self, depth, reader):
-        template = ' ' * (depth * MD_INDENT) + '* [{title}]()'
+        if depth == 0:
+            template = '# {title}'
+        else:
+            template = ' ' * ((depth-1) * MD_INDENT) + '* [{title}]()'
         line = template.format(title=self.name)
         sub_cats = reader.sub_cat(self.uuid)
         articles = reader.articles(self.uuid)
@@ -39,7 +42,7 @@ class Article(object):
             self.title = 'None'
 
     def genSummaryLine(self, depth):
-        template = ' ' * (depth * MD_INDENT) + '* [{title}](docs/{file})'
+        template = ' ' * ((depth - 1) * MD_INDENT) + '* [{title}](docs/{file})'
         return template.format(title=self.title, file=str(self.uuid)+'.md')
 
 
