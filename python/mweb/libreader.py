@@ -13,7 +13,7 @@ class Category(object):
 
     def genSummaryLine(self, depth, reader):
         if depth == 0:
-            template = '# {title}'
+            template = '\n## {title}\n'
         else:
             template = ' ' * ((depth-1) * MD_INDENT) + '* [{title}]()'
         line = template.format(title=self.name)
@@ -184,4 +184,4 @@ class MainLib(object):
             conn.close()
 
     def gen_summary(self):
-        return '\n'.join(i.genSummaryLine(0, self) for i in self.categories())
+        return '# Summary\n\n' + '\n'.join(i.genSummaryLine(0, self) for i in self.categories())
