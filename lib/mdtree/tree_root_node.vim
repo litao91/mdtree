@@ -11,6 +11,8 @@ function! s:TreeRootNode.New(path, mdtree)
     let newRootNode.children = []
     let newRootNode._mdtree = a:mdtree
     let newRootNode._mdtree.libname = newRootNode.path.pathStr . "/" . g:MDTreeLibName
+    let newRootNode.uuid = '0'
+    let newRootNode.isCategory = 1
     return newRootNode
 endfunction
 
@@ -88,6 +90,9 @@ function! s:TreeRootNode.findNode(uuid)
 endfunction
 
 function! s:TreeRootNode.GetSelected()
+    if line('.') == 1
+        return self
+    endif
     let l:curline = getline(line('.'))
     let l:uuid = split(l:curline, "|")[1]
     return self.findNode(l:uuid)
@@ -104,4 +109,13 @@ function! s:TreeRootNode.removeChild(treenode)
             return
         endif
     endfor
+endfunction
+
+function! s:TreeRootNode.delete()
+    call mdtree#echoError("Root node can't be deleted")
+endfunction
+
+function! s:TreeRootNode.addChild(node)
+    let a:node.parent = self
+    call add(self.children, a:node)
 endfunction

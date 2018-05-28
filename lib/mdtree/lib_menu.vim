@@ -16,7 +16,7 @@ function! MDTreeAddNode()
     endif
     let newNodeName = input("ChildNode Name\n" , "" , "file")
     if newNodeName ==# ''
-        call mdtree#echo("Node creation aborted".)
+        call mdtree#echo('Node creation aborted')
         return
     endif
 python3 << EOF

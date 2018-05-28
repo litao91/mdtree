@@ -21,7 +21,9 @@ function! s:initVariable(var, value)
     return 0
 endfunction
 
-"SECTION: Init varialbe calls for key mappings {{{2
+" =======================================================================
+" SECTION: Init varialbe calls for key mappings {{{2
+" =======================================================================
 call s:initVariable("g:MDTreeGlyphReadonly", "RO")
 call s:initVariable("g:MDTreeWinPos", "left")
 call s:initVariable("g:MDTreeWinSize", 31)
@@ -46,6 +48,7 @@ else
 endif
 
 
+" =======================================================================
 " SECTION: Public API {{{2
 " =======================================================================
 function! MDTreeAddKeyMap(options)
