@@ -51,13 +51,15 @@ class MainLib(object):
 
     def categories(self):
         with sqlite3.connect(self.db_file) as conn:
-            results = conn.execute("SELECT uuid, name FROM cat where pid='0'")
+            results = conn.execute(
+                "SELECT uuid, name FROM cat where pid='0' ORDER BY sort")
             return [Category(i[0], i[1]) for i in results]
 
     def sub_cat(self, cat_uuid):
         with sqlite3.connect(self.db_file) as conn:
-            results = conn.execute("SELECT uuid, name FROM cat WHERE pid=?",
-                                  (cat_uuid,))
+            results = conn.execute(
+                "SELECT uuid, name FROM cat WHERE pid=?  ORDER BY sort",
+                (cat_uuid,))
             return [Category(i[0], i[1]) for i in results if i[0] is not None]
 
     def articles(self, cat_uuid):
@@ -67,7 +69,7 @@ class MainLib(object):
                 SELECT article.uuid FROM cat
                 LEFT JOIN cat_article ON cat.uuid = cat_article.rid
                 LEFT JOIN article on cat_article.aid = article.uuid
-                WHERE cat.uuid = ?;
+                WHERE cat.uuid = ? ORDER BY article.sort;
                 """, (cat_uuid,))
             return [Article(i[0], self.docs_dir) for i in results
                     if i[0] is not None]
