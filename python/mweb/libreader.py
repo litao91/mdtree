@@ -79,6 +79,10 @@ class MainLib(object):
         uuid = int(time.time() * 10000)
         try:
             c = conn.cursor()
+            max_sort = conn.execute("SELECT MAX(sort) FROM cat").fetchall()
+            sort = 1
+            if len(max_sort) >= 1:
+                sort = max_sort[0][0]
             c.execute(
                 """
                 INSERT INTO cat (
@@ -110,9 +114,9 @@ class MainLib(object):
                   siteEnableLaTeX,
                   siteEnableChart)
                 VALUES
-                 (?,?,?,'',12,1,0,'','',0,'','','','',0,0,'','','','','','',
+                 (?,?,?,'',12,?,0,'','',0,'','','','',0,0,'','','','','','',
                 '','','',0,0)
-                """, (pid, uuid, cat_name))
+                """, (pid, uuid, cat_name, sort))
             conn.commit()
             return uuid
         except:
