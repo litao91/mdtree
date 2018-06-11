@@ -12,7 +12,7 @@ class Category(object):
         self.uuid = uuid
 
     def genSummaryLine(self, depth, reader):
-        template = '\n' + '#' * (depth + 2) + ' {title}\n'
+        template = '\n\n' + '#' * (depth + 2) + ' {title}\n'
         line = template.format(title=self.name)
         sub_cats = reader.sub_cat(self.uuid)
         articles = reader.articles(self.uuid)
