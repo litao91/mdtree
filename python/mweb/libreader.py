@@ -52,13 +52,13 @@ class MainLib(object):
     def categories(self):
         with sqlite3.connect(self.db_file) as conn:
             results = conn.execute(
-                "SELECT uuid, name FROM cat where pid='0' ORDER BY sort desc")
+                "SELECT uuid, name FROM cat where pid='0' ORDER BY sort")
             return [Category(i[0], i[1]) for i in results]
 
     def sub_cat(self, cat_uuid):
         with sqlite3.connect(self.db_file) as conn:
             results = conn.execute(
-                "SELECT uuid, name FROM cat WHERE pid=?  ORDER BY sort desc",
+                "SELECT uuid, name FROM cat WHERE pid=?  ORDER BY sort",
                 (cat_uuid,))
             return [Category(i[0], i[1]) for i in results if i[0] is not None]
 
